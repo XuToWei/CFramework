@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
+  <PropertyGroup>
+    <ProjectGuid>{5A5F84B1-DD1A-4134-932C-C3AF5BDAD391}</ProjectGuid>
+    <RootNamespace>ILRuntime.Mono.Cecil.Mdb</RootNamespace>
+    <AssemblyName>ILRuntime.Mono.Cecil.Mdb</AssemblyName>
+	<TargetFramework>net35</TargetFramework>
+	<DefineConstants>$(DefineConstants);CECIL</DefineConstants>
+	<SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\ProjectInfo.cs" />
+    <Compile Include="Mono.Cecil.Mdb\*.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolWriter\*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Mono.Cecil.csproj" />
+  </ItemGroup>
+</Project>

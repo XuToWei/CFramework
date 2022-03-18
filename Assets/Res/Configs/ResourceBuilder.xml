@@ -9,7 +9,7 @@
       <AdditionalCompressionSelected>False</AdditionalCompressionSelected>
       <ForceRebuildAssetBundleSelected>False</ForceRebuildAssetBundleSelected>
       <BuildEventHandlerTypeName>Game.Editor.Build.BuildEventHandle</BuildEventHandlerTypeName>
-      <OutputDirectory>G:/Github/UGFExtensions/AssetBundles</OutputDirectory>
+      <OutputDirectory>G:/Github/Game/AssetBundles</OutputDirectory>
       <OutputPackageSelected>True</OutputPackageSelected>
       <OutputFullSelected>True</OutputFullSelected>
       <OutputPackedSelected>True</OutputPackedSelected>

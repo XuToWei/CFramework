@@ -73,7 +73,7 @@ namespace Game
     {
         public LoadHotfixDataTableUserData(string dataTableName, object userData)
         {
-            DataTableName = $"UGFExtensions.Hotfix.DR{dataTableName}";
+            DataTableName = $"Hotfix.DR{dataTableName}";
             UserData = userData;
         }
 

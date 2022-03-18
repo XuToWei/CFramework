@@ -18,6 +18,8 @@ namespace Game
         protected override void OnEnter(ProcedureOwner procedureOwner)
         {
             base.OnEnter(procedureOwner);
+            //Awaitable模块事件注册后才能使用
+            AwaitableExtension.SubscribeEvent();
             
             // 设置屏幕信息，为迁移其他平台做准备（小程序等）
             GameEntry.Screen.Set(Screen.width, Screen.height, Screen.safeArea);
@@ -65,6 +67,7 @@ namespace Game
                 }
                 catch
                 {
+                    
                 }
             }
 

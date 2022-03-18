@@ -39,7 +39,7 @@ namespace Game
             }
             else
             {
-                ChangeState<ProcedurePreload>(procedureOwner);
+                ChangeState<ProcedureLoadHotfix>(procedureOwner);
             }
         }
 

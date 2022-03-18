@@ -21,7 +21,7 @@ using Object = UnityEngine.Object;
 
 namespace Game
 {
-    [CreateAssetMenu(fileName = "SpriteCollection", menuName = "UGFExtensions/SpriteCollection", order = 0)]
+    [CreateAssetMenu(fileName = "SpriteCollection", menuName = "Game/SpriteCollection", order = 0)]
 #if ODIN_INSPECTOR
     public class SpriteCollection : SerializedScriptableObject
     {

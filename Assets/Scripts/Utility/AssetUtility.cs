@@ -54,9 +54,14 @@ namespace Game
             return Utility.Text.Format("Assets/Res/UI/UISounds/{0}.wav", assetName);
         }
         
-        public static string GetHotfixDLLAsset(string assetName)
+        public static string GetHotfixDllAsset(string assetName)
         {
-            return Utility.Text.Format("Assets/Res/HotfixDll/{0}.bytes", assetName);
+            return Utility.Text.Format("{0}{1}.dll.bytes", HotfixConfig.DllFolderPath, assetName);
+        }
+        
+        public static string GetHotfixPdbAsset(string assetName)
+        {
+            return Utility.Text.Format("{0}{1}.pdb.bytes", HotfixConfig.DllFolderPath, assetName);
         }
     }
 }
