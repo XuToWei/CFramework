@@ -129,6 +129,7 @@
     <Compile Include="Procedure\Base\ProcedureManager.cs" />
     <Compile Include="Procedure\Custom\ProcedureChangeScene.cs" />
     <Compile Include="Procedure\Custom\ProcedureEntry.cs" />
+    <Compile Include="Procedure\Custom\ProcedureGame.cs" />
     <Compile Include="Procedure\Custom\ProcedureLoadHotfixDataTable.cs" />
     <Compile Include="Procedure\Custom\ProcedurePreload.cs" />
     <Compile Include="Procedure\Custom\ProcedureWaitForDebug.cs" />
@@ -137,6 +138,8 @@
     <Compile Include="ReferencePool\ReferencePool.cs" />
     <Compile Include="ReferencePool\ReferencePool.ReferenceCollection.cs" />
     <Compile Include="ReferencePool\ReferencePoolInfo.cs" />
+    <Compile Include="UI\Custom\BindComponents\TestForm.BindComponents.cs" />
+    <Compile Include="UI\Custom\TestForm.cs" />
     <Compile Include="Utility\HotfixAssetUtility.cs" />
     <Compile Include="Utility\PermutationAndCombinationUtility.cs" />
   </ItemGroup>
@@ -144,7 +147,6 @@
     <Folder Include="Entity\Custom\EntityData" />
     <Folder Include="Entity\Custom\EntityLogic" />
     <Folder Include="Game" />
-    <Folder Include="UI\Custom\BindComponents" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

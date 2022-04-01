@@ -9,27 +9,13 @@ namespace Hotfix
     /// </summary>
     public class ProcedureWaitForDebug : ProcedureBase
     {
-        private Type m_ProcedureType = null;
-        protected internal override void OnEnter(IFsm procedureOwner)
-        {
-            base.OnEnter(procedureOwner);
-            m_ProcedureType = (Type)procedureOwner.GetData<VarObject>(Constant.ProcedureData.ProcedureType).Value;
-            procedureOwner.RemoveData(Constant.ProcedureData.ProcedureType);
-        }
-
         protected internal override void OnUpdate(IFsm procedureOwner, float elapseSeconds, float realElapseSeconds)
         {
             base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
             if (Input.GetKeyDown(KeyCode.A)) 
             {
-                ChangeState(procedureOwner,m_ProcedureType);
+                ChangeState<ProcedurePreload>(procedureOwner);
             }
-        }
-
-        protected internal override void OnLeave(IFsm procedureOwner, bool isShutdown)
-        {
-            base.OnLeave(procedureOwner, isShutdown);
-            m_ProcedureType = null;
         }
     }
 }

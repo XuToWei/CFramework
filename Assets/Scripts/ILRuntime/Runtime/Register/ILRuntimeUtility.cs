@@ -1,5 +1,5 @@
 ﻿#if ILRuntime
-using ILRuntime.Runtime.Generated;
+//using ILRuntime.Runtime.Generated;
 using System.Linq;
 using System.Reflection;
 using AppDomain = ILRuntime.Runtime.Enviorment.AppDomain;
@@ -19,7 +19,7 @@ namespace Game
                 methodInfo.Invoke(null, objects);
             }
             
-            CLRBindings.Initialize(appDomain);
+            //CLRBindings.Initialize(appDomain);
         }
     }
 }

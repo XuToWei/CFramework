@@ -40,10 +40,10 @@ namespace Game
         {
             foreach (var dllName in HotfixConfig.DllNames)
             {
-                TextAsset dllAsset = await GameEntry.Resource.LoadAssetAsync<TextAsset>(AssetUtility.GetHotfixDllAsset("Hotfix.dll"));
+                TextAsset dllAsset = await GameEntry.Resource.LoadAssetAsync<TextAsset>(AssetUtility.GetHotfixDllAsset("Hotfix"));
                 byte[] dll = dllAsset.bytes;
                 Log.Info(Utility.Text.Format("{0} dll加载完毕", dllName));
-                TextAsset pdbAsset = await GameEntry.Resource.LoadAssetAsync<TextAsset>(AssetUtility.GetHotfixDllAsset("Hotfix.pdb"));
+                TextAsset pdbAsset = await GameEntry.Resource.LoadAssetAsync<TextAsset>(AssetUtility.GetHotfixPdbAsset("Hotfix"));
                 if (pdbAsset != null)
                 {
                     byte[] pdb = pdbAsset.bytes;

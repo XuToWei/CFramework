@@ -61,15 +61,14 @@ namespace Hotfix
                     return;
                 }
             }
-
-            procedureOwner.SetData<VarInt32>("NextSceneId", GameEntry.Config.GetInt("Scene.Menu"));
-            ChangeState<ProcedureChangeScene>(procedureOwner);
+            
+            ChangeState<ProcedureGame>(procedureOwner);
         }
 
         private void PreloadResources()
         {
             // Preload configs
-            LoadConfig("DefaultConfig");
+            // LoadConfig("DefaultConfig");
 
             // Preload data tables
             foreach (KeyValuePair<string, Type> dataTableName in DataTableNames)
@@ -78,10 +77,10 @@ namespace Hotfix
             }
 
             // Preload dictionaries
-            LoadDictionary("Default");
+            // LoadDictionary("Default");
 
             // Preload fonts
-            LoadFont("MainFont");
+            // LoadFont("MainFont");
         }
 
         private void LoadConfig(string configName)

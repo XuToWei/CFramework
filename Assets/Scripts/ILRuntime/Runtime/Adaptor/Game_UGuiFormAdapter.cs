@@ -5,13 +5,13 @@ using ILRuntime.Runtime.Intepreter;
 
 namespace ILR
 {   
-    public class HotfixUGuiFormAdapter : CrossBindingAdaptor
+    public class UGuiFormAdapter : CrossBindingAdaptor
     {
         public override Type BaseCLRType
         {
             get
             {
-                return typeof(Game.HotfixUGuiForm);
+                return typeof(Game.UGuiForm);
             }
         }
 
@@ -28,7 +28,7 @@ namespace ILR
             return new Adapter(appdomain, instance);
         }
 
-        public class Adapter : Game.HotfixUGuiForm, CrossBindingAdaptorType,IAdapterProperty
+        public class Adapter : Game.UGuiForm, CrossBindingAdaptorType,IAdapterProperty
         {
             CrossBindingMethodInfo mClose_0 = new CrossBindingMethodInfo("Close");
             CrossBindingMethodInfo<System.Object> mOnInit_1 = new CrossBindingMethodInfo<System.Object>("OnInit");
