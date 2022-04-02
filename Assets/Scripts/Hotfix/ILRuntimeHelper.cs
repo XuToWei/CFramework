@@ -42,18 +42,19 @@ namespace Game
             {
                 throw new Exception($"Can not find hotfix mono behaviour {hotfixFullTypeName}");
             }
+
             //热更DLL内的类型比较麻烦。首先我们得自己手动创建实例
             var ilInstance = new ILTypeInstance(type, false); //手动创建实例是因为默认方式会new MonoBehaviour，这在Unity里不允许
             //接下来创建Adapter实例
             Type adapterType = type.FirstCLRBaseType.TypeForCLR;
             T clrInstance = go.AddComponent(adapterType) as T;
             //unity创建的实例并没有热更DLL里面的实例，所以需要手动赋值
-            // if (clrInstance is IAdapterProperty adapterProperty)
-            // {
-            //     adapterProperty.ILInstance = ilInstance;
-            //     adapterProperty.AppDomain = appDomain;
-            // }
-            
+            if (clrInstance is IAdapterProperty adapterProperty)
+            {
+                adapterProperty.ILInstance = ilInstance;
+                adapterProperty.AppDomain = appDomain;
+            }
+
             //这个实例默认创建的CLRInstance不是通过AddComponent出来的有效实例，所以得手动替换
             ilInstance.CLRInstance = clrInstance;
             return clrInstance;

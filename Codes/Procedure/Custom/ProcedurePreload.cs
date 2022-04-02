@@ -15,12 +15,12 @@ namespace Hotfix
     {
         private static readonly Dictionary<string, Type> DataTableNames = new Dictionary<string, Type>()
         {
-            { "Entity", typeof(DREntity) },
-            { "Music", typeof(DRMusic) },
-            { "Scene", typeof(DRScene) },
-            { "Sound", typeof(DRSound) },
+            // { "Entity", typeof(DREntity) },
+            // { "Music", typeof(DRMusic) },
+            // { "Scene", typeof(DRScene) },
+            // { "Sound", typeof(DRSound) },
             { "UIForm", typeof(DRUIForm) },
-            { "UISound", typeof(DRUISound) },
+            // { "UISound", typeof(DRUISound) },
         };
 
         private readonly Dictionary<string, bool> m_LoadedFlag = new Dictionary<string, bool>();
@@ -33,6 +33,8 @@ namespace Hotfix
             GameEntry.Event.Subscribe(LoadConfigFailureEventArgs.EventId, OnLoadConfigFailure);
             GameEntry.Event.Subscribe(LoadDictionarySuccessEventArgs.EventId, OnLoadDictionarySuccess);
             GameEntry.Event.Subscribe(LoadDictionaryFailureEventArgs.EventId, OnLoadDictionaryFailure);
+            GameEntry.Event.Subscribe(LoadDataTableSuccessEventArgs.EventId, OnLoadDataTableSuccess);
+            GameEntry.Event.Subscribe(LoadDataTableFailureEventArgs.EventId, OnLoadDataTableFailure);
 
             m_LoadedFlag.Clear();
 
@@ -45,6 +47,8 @@ namespace Hotfix
             GameEntry.Event.Unsubscribe(LoadConfigFailureEventArgs.EventId, OnLoadConfigFailure);
             GameEntry.Event.Unsubscribe(LoadDictionarySuccessEventArgs.EventId, OnLoadDictionarySuccess);
             GameEntry.Event.Unsubscribe(LoadDictionaryFailureEventArgs.EventId, OnLoadDictionaryFailure);
+            GameEntry.Event.Unsubscribe(LoadDataTableSuccessEventArgs.EventId, OnLoadDataTableSuccess);
+            GameEntry.Event.Unsubscribe(LoadDataTableFailureEventArgs.EventId, OnLoadDataTableFailure);
 
             base.OnLeave(procedureOwner, isShutdown);
         }
@@ -93,7 +97,8 @@ namespace Hotfix
         private void LoadDataTable(string dataTableName, Type type)
         {
             string dataTableAssetName = AssetUtility.GetDataTableAsset(dataTableName, true);
-            GameEntry.DataTableExtension.LoadDataTableRowConfig(type, dataTableAssetName);
+            Log.Info(dataTableAssetName);
+            GameEntry.DataTable.LoadDataTable(dataTableName, dataTableAssetName, null);
             Log.Info("Load data table '{0}' row config OK.", dataTableName);
         }
 
@@ -168,6 +173,29 @@ namespace Hotfix
 
             Log.Error("Can not load dictionary '{0}' from '{1}' with error message '{2}'.", ne.DictionaryAssetName,
                 ne.DictionaryAssetName, ne.ErrorMessage);
+        }
+        
+        private void OnLoadDataTableSuccess(object sender, GameEventArgs e)
+        {
+            LoadDataTableSuccessEventArgs ne = (LoadDataTableSuccessEventArgs)e;
+            if (ne.UserData != this)
+            {
+                return;
+            }
+
+            m_LoadedFlag[ne.DataTableAssetName] = true;
+            Log.Info("Load data table '{0}' OK.", ne.DataTableAssetName);
+        }
+
+        private void OnLoadDataTableFailure(object sender, GameEventArgs e)
+        {
+            LoadDataTableFailureEventArgs ne = (LoadDataTableFailureEventArgs)e;
+            if (ne.UserData != this)
+            {
+                return;
+            }
+
+            Log.Error("Can not load data table '{0}' from '{1}' with error message '{2}'.", ne.DataTableAssetName, ne.DataTableAssetName, ne.ErrorMessage);
         }
     }
 }

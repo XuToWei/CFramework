@@ -7,7 +7,7 @@ namespace Hotfix
         protected internal override void OnEnter(IFsm procedureOwner)
         {
             base.OnEnter(procedureOwner);
-            GameEntry.UI.OpenUIForm(UIFormId.Test);
+            GameEntry.UI.OpenUIForm(1);
         }
     }
 }

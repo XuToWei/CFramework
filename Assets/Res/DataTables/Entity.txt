@@ -1,5 +1,0 @@
-﻿#	Entity										
-#	Id		AssetName	GroupName							
-#	int		string	string							
-#	编号	描述	资源名称	资源组名							
-	1	冒烟特效	Smoke	Effect							

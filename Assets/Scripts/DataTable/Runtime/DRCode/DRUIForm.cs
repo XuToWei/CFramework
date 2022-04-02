@@ -1,6 +1,6 @@
 ﻿//------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
-// 生成时间：2021-07-13 17:37:11.379
+// 生成时间：2022-04-02 11:05:50.099
 //------------------------------------------------------------
 
 using GameFramework;
@@ -8,12 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using UnityEngine;
 using UnityGameFramework.Runtime;
+
 
 namespace Game
 {
     /// <summary>
-    /// 界面配置表。
+    /// UIForm。
     /// </summary>
     public class DRUIForm : DataRowBase
     {
@@ -82,6 +84,7 @@ namespace Game
 			UIGroupName = columnStrings[index++];
 			AllowMultiInstance = bool.Parse(columnStrings[index++]);
 			PauseCoveredUIForm = bool.Parse(columnStrings[index++]);
+            index++;
             GeneratePropertyArray();
             return true;
         }

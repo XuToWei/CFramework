@@ -1,5 +1,0 @@
-﻿#	Constant																							
-#	Id		AnimationCrossFadeTime	BoltMoveSpeed	FallCheckDistance	FallCheckSpeed	UpCheckDistance	RockCheckSpeed	RoleSpeed	GetCoinNum	BurnCoinNum	UIDelayTime	HightOffset	VerticalSpeed	ArrowSpeed	ArrowForce	MultiScreenLevelUnlock	RotationSensitivity	ExplosionForce	ExplosionCheckSpeed	ExplosionRadius	BezierMoveSpeed	AdditionalTime	NameCreate
-#	int		float	float	float	float	float	float	float	int	int	float	float	float	float	int	int	float	float	float	float	float	int	int
-#	编号	备注	动作过渡时间（秒）	插销移动速度	角色下落，脚距离地面X（米）时，播放下落动作	角色下落，速度大于X时，播放下落动作	角色如果被卡住了，当头上隔X米有东西的时候，不会给向上的速度	岩石速度大于X（米/秒）时，碰到人或怪会发生交互事件（砸死人）	主角跑步速度	获得X枚金币后胜利	毁坏X枚金币后胜利	胜利/失败界面延迟X秒弹出	怪和人高度差小于X时，中间没有阻挡，怪会主动攻击人	主角如果被卡住，给主角竖直方向的速度	箭飞行速度	弓箭攻击力度	主线模式玩到X关后，多屏模式解锁	皮肤界面拖动角色转动的灵敏度	爆炸力大小	爆炸检测速度	爆炸半径范围	Bezier曲线移动速度	经典复刻看提示后增加时长（秒）	起名界面触发对话
-	1	动作过渡时间（秒）	0.15	10	0.5	0.2	0.1	0.5	1.5	10	5	2.5	0.8	1.5	10	200	20	0.5	100	0.3	1.25	3	120	500102

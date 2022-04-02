@@ -20,7 +20,7 @@ namespace Game
             if (uGuiForm == null)
             {
                 string hotfixUGuiFormFullName =
-                    Utility.Text.Format("{0}.{1}", "UGFExtensions.Hotfix", m_HotfixFormName);
+                    Utility.Text.Format("{0}.{1}", "Hotfix", m_HotfixFormName);
                 uGuiForm = gameObject.AddHotfixMonoBehaviour<UGuiForm>(hotfixUGuiFormFullName);
             }
 
