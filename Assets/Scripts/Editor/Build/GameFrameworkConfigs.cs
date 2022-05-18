@@ -1,7 +1,4 @@
-﻿
-
-using GameFramework;
-using System.IO;
+﻿using System.IO;
 using UnityEngine;
 using UnityGameFramework.Editor;
 using UnityGameFramework.Editor.ResourceTools;
