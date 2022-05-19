@@ -20,7 +20,7 @@ namespace Game.Editor.DataTable
     {
         private static readonly Regex NameRegex = new Regex(@"^[A-Z][A-Za-z0-9_]*$");
 
-        [MenuItem("DataTable/Excel To Txt", priority = 13)]
+        [MenuItem("Tools/DataTable/Excel To Txt", priority = 6)]
         public static void ExcelToTxt()
         {
             if (!Directory.Exists(DataTableConfig.ExcelsFolder))
@@ -91,7 +91,9 @@ namespace Game.Editor.DataTable
                                     }
                                     else
                                     {
-                                        sb.Append(sheet.Cells[i, j].Value);
+                                        string str = sheet.Cells[i, j].Value.ToString();
+                                        str = str.Replace('\t', ' ');
+                                        sb.Append(str);
                                     }
 
                                     if (j != columnCount)

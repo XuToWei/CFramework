@@ -7,7 +7,7 @@ namespace Game.Editor
     [System.Reflection.Obfuscation(Exclude = true)]
     public static class ILRuntimeCLRBinding
     {
-        [MenuItem("Tools/ILRuntime/通过自动分析热更DLL生成CLR绑定")]
+        [MenuItem("Tools/ILRuntime/Generate CLR Binding By Analysis")]
         public static void GenerateCLRBindingByAnalysis()
         {
             //用新的分析热更dll调用引用来生成绑定代码
@@ -17,7 +17,7 @@ namespace Game.Editor
                 using System.IO.FileStream fs = new System.IO.FileStream(AssetUtility.GetHotfixDllAsset(dllName), System.IO.FileMode.Open, System.IO.FileAccess.Read);
                 domain.LoadAssembly(fs);
                 ILRuntimeUtility.RegisterCrossBindingAdaptor(domain);
-                ILRuntime.Runtime.CLRBinding.BindingCodeGenerator.GenerateBindingCode(domain, "Assets/Scripts/ILRuntime/Runtime/Generated");
+                ILRuntime.Runtime.CLRBinding.BindingCodeGenerator.GenerateBindingCode(domain, "Assets/Scripts/Generated/ILRuntime/");
             }
             
             AssetDatabase.Refresh();
