@@ -39,7 +39,6 @@ namespace ILRuntime.Runtime.Generated
             UnityEngine_Object_Binding.Register(app);
             UnityGameFramework_Runtime_Entity_Binding.Register(app);
             Game_GameEntry_Binding.Register(app);
-            Game_DataTableExtensionComponent_Binding.Register(app);
             System_Int32_Binding.Register(app);
             Game_DREntity_Binding.Register(app);
             Game_AssetUtility_Binding.Register(app);

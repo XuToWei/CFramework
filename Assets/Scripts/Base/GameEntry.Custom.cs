@@ -11,11 +11,6 @@
         public static BuiltinComponent Builtin { get; private set; }
         
         /// <summary>
-        /// 数据表扩展组件
-        /// </summary>
-        public static DataTableExtensionComponent DataTableExtension { get; private set; }
-        
-        /// <summary>
         /// 热更组件
         /// </summary>
         public static HotfixComponent Hotfix { get; private set; }
@@ -46,7 +41,6 @@
             Builtin = UnityGameFramework.Runtime.GameEntry.GetComponent<BuiltinComponent>();
             SpriteCollection = UnityGameFramework.Runtime.GameEntry.GetComponent<SpriteCollectionComponent>();
             TextureSet = UnityGameFramework.Runtime.GameEntry.GetComponent<TextureComponent>();
-            DataTableExtension = UnityGameFramework.Runtime.GameEntry.GetComponent<DataTableExtensionComponent>();
             Hotfix = UnityGameFramework.Runtime.GameEntry.GetComponent<HotfixComponent>();
             Screen = UnityGameFramework.Runtime.GameEntry.GetComponent<ScreenComponent>();
         }

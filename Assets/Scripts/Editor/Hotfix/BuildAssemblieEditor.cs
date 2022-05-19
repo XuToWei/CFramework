@@ -1,25 +1,20 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using UnityEngine;
 using UnityEditor;
-using UnityEditor.Compilation;
 
-namespace ET
+namespace Game.Editor.Hotfix
 {
     [InitializeOnLoad]
-    public static class BuildAssemblieEditor
+    public static class HotfixAssemblyBuildEditor
     {
         /// <summary>
         /// 最原始的4个程序集路径
         /// </summary>
         private static string[] s_OriginDllDirs = new[]
         {
-            "Library/ScriptAssemblies/Unity.Model",
-            "Library/ScriptAssemblies/Unity.ModelView",
-            "Library/ScriptAssemblies/Unity.Hotfix",
-            "Library/ScriptAssemblies/Unity.HotfixView"
+            "Library/ScriptAssemblies/Hotfix.Model",
+            "Library/ScriptAssemblies/Hotfix.ModelView",
+            "Library/ScriptAssemblies/Hotfix.Hotfix",
+            "Library/ScriptAssemblies/Hotfix.HotfixView"
         };
 
         /// <summary>
@@ -36,24 +31,29 @@ namespace ET
         /// <summary>
         /// 最终的Hotfix dll路径
         /// </summary>
-        private static string s_FinalHotfixDllDir = "Assets/Res/Code/";
+        private static string s_FinalHotfixDllDir = "Assets/Res/HotfixDlls/";
 
-        static BuildAssemblieEditor()
+        static HotfixAssemblyBuildEditor()
         {
             for (int i = 0; i < s_OriginDllDirs.Length; i++)
             {
                 string dllOriPath = s_OriginDllDirs[i] + ".dll";
                 string dllDesPath = Path.Combine(s_FinalHotfixDllDir, s_OriginDllName[i] + ".dll.bytes");
-
+            
                 string pdbOriPath = s_OriginDllDirs[i] + ".pdb";
                 string pdbDesPath = Path.Combine(s_FinalHotfixDllDir, s_OriginDllName[i] + ".pdb.bytes");
 
-                File.Copy(dllOriPath, dllDesPath, true);
-                File.Copy(pdbOriPath, pdbDesPath, true);
-                AssetDatabase.ImportAsset(dllDesPath);
-                AssetDatabase.ImportAsset(pdbDesPath);
+                if (File.Exists(dllOriPath))
+                {
+                    File.Copy(dllOriPath, dllDesPath, true);
+                    AssetDatabase.ImportAsset(dllDesPath);
+                }
+                if (File.Exists(pdbOriPath))
+                {
+                    File.Copy(pdbOriPath, pdbDesPath, true);
+                    AssetDatabase.ImportAsset(pdbDesPath);
+                }
             }
-
             AssetDatabase.Refresh();
         }
     }
