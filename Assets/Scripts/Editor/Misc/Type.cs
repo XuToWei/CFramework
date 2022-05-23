@@ -8,18 +8,18 @@
 using GameFramework;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityGameFramework.Editor;
 
-namespace UnityGameFramework.Editor
+namespace Game.Editor
 {
     /// <summary>
     /// 类型相关的实用函数。
     /// </summary>
-    internal static class Type
+    internal static class TypeHelper
     {
         private static readonly string[] RuntimeAssemblyNames =
         {
 #if UNITY_2017_3_OR_NEWER
-            "UnityGameFramework.Runtime",
             "Game",
 #endif
             "Assembly-CSharp",
@@ -28,12 +28,10 @@ namespace UnityGameFramework.Editor
         private static readonly string[] RuntimeOrEditorAssemblyNames =
         {
 #if UNITY_2017_3_OR_NEWER
-            "UnityGameFramework.Runtime",
             "Game",
 #endif
             "Assembly-CSharp",
 #if UNITY_2017_3_OR_NEWER
-            "UnityGameFramework.Editor",
             "Game.Editor",
 #endif
             "Assembly-CSharp-Editor",

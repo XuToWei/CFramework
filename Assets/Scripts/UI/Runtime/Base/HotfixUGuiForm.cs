@@ -7,7 +7,7 @@ namespace Game
     /// 热更新层UGUI界面
     /// </summary>
     [DisallowMultipleComponent]
-    public class HotfixUGuiForm : MonoBehaviour
+    public class HotfixUGuiForm : UGuiForm
     {
         /// <summary>
         /// 对应的热更新层UGUI界面类名

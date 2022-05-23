@@ -17,12 +17,12 @@ namespace Game
 {
     public class ILRuntimeHelper : HotfixHelperBase
     {
-        private AppDomain m_appDomain;
+        private AppDomain m_AppDomain;
 
         /// <summary>
         /// ILRuntime入口对象
         /// </summary>
-        public AppDomain AppDomain => m_appDomain;
+        public AppDomain AppDomain => m_AppDomain;
 
         private IMethod m_Update;
         private IMethod m_Shutdown;
@@ -78,50 +78,37 @@ namespace Game
 
         public override object GetHotfixGameEntry => m_HotfixGameEntry;
 
-        public override async void Load(Action loadCompletedAction)
+        public override void LoadAssembly(byte[] dllBytes, byte[] pdbBytes)
         {
-            m_appDomain = new AppDomain(ILRuntimeJITFlags.JITOnDemand);
-            ILRuntimeUtility.InitILRuntime(AppDomain);
-            bool need_debug_service = false;
-            
-            foreach (var dllName in HotfixConfig.DllNames)
-            {
-                TextAsset dllAsset = await GameEntry.Resource.LoadAssetAsync<TextAsset>(AssetUtility.GetHotfixDllAsset(dllName));
-                Log.Info(Utility.Text.Format("{0} dll加载完毕", dllName));
-                byte[] dll = dllAsset.bytes;
-                
-#if !DISABLE_ILRUNTIME_DEBUG
-                TextAsset pdbAsset = await GameEntry.Resource.LoadAssetAsync<TextAsset>(AssetUtility.GetHotfixPdbAsset(dllName));
-                if (pdbAsset != null)
-                {
-                    byte[] pdb = pdbAsset.bytes;
-                    Log.Info(Utility.Text.Format("{0} pdb加载完毕", dllName));
-                    AppDomain.LoadAssembly(new MemoryStream(dll), new MemoryStream(pdb), new ILRuntime.Mono.Cecil.Pdb.PdbReaderProvider());
-                    need_debug_service = true;
-                }
-                else
-                {
-                    AppDomain.LoadAssembly(new MemoryStream(dll));
-                }
-#else
-                AppDomain.LoadAssembly(new MemoryStream(dll));
-#endif
-            }
+            m_AppDomain = new AppDomain(ILRuntimeJITFlags.JITOnDemand);
 
-            if (need_debug_service)
+            if (pdbBytes == null)
             {
-                //启动调试服务器
-                AppDomain.DebugService.StartDebugService(56789);
-                Log.Info("启动ILRuntime调试服务器:56789");
+                AppDomain.LoadAssembly(new MemoryStream(dllBytes));
             }
-            
+            else
+            {
+                AppDomain.LoadAssembly(new MemoryStream(dllBytes), new MemoryStream(pdbBytes), new ILRuntime.Mono.Cecil.Pdb.PdbReaderProvider());
+            }
+            Log.Info("Hotfix load assembly completed!");
+        }
+
+        public void Start()
+        {
+            StartDebugService();
 #if DEBUG && !NO_PROFILER
             //设置Unity主线程ID 这样就可以用Profiler看性能消耗了
             AppDomain.UnityMainThreadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
 #endif
             m_HotfixTypes = AppDomain.LoadedTypes.Values.Select(x => x.ReflectionType).ToList();
-            loadCompletedAction?.Invoke();
-            Log.Info("hotfix加载完毕");
+            Log.Info("Hotfix start!");
+        }
+
+        private void StartDebugService()
+        {
+            //启动调试服务器
+            AppDomain.DebugService.StartDebugService(56789);
+            Log.Info("启动ILRuntime调试服务器:56789");
         }
 
         public override void Enter()

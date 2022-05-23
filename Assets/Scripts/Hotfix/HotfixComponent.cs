@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GameFramework.Resource;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -7,7 +8,12 @@ namespace Game
 {
     public class HotfixComponent : GameFrameworkComponent
     {
-        [SerializeField] private string m_HotfixHelperTypeName = "Game.ILRuntimeHelper";
+        [SerializeField]
+        private string m_HotfixHelperTypeName = "Game.ILRuntimeHelper";
+        
+        [SerializeField]
+        private DataTableHelperBase m_CustomHotfixHelper = null;
+        
         private HotfixHelperBase m_HotfixHelper;
 
         /// <summary>
@@ -21,6 +27,10 @@ namespace Game
 
         private void Start()
         {
+            if (GameEntry.Base.EditorResourceMode && GameEntry.Resource.ResourceMode != ResourceMode.Package)
+            {
+                m_HotfixHelperTypeName = "Game.ILRuntimeHelper";
+            }
             m_HotfixHelper = Helper.CreateHelper(m_HotfixHelperTypeName, m_HotfixHelper);
             if (m_HotfixHelper == null)
             {
@@ -57,7 +67,7 @@ namespace Game
             m_HotfixHelper.ShutDown();
         }
 
-        public object CreateHotfixInstance(string typeName)
+        public object CreateInstance(string typeName)
         {
             return m_HotfixHelper.CreateInstance(typeName);
         }

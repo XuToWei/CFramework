@@ -33,7 +33,6 @@ namespace Game
         {
             base.OnShow(userData);
             Name = Utility.Text.Format("[Entity {0}]", Id.ToString());
-            CachedTransform.localScale = Vector3.one;
         }
 
 #if UNITY_2017_3_OR_NEWER

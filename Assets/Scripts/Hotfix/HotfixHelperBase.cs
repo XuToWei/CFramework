@@ -7,7 +7,7 @@ namespace Game
 {
     public abstract class HotfixHelperBase : MonoBehaviour, IHotfixHelper
     {
-        public abstract void Load(Action loadCompletedAction);
+        public abstract void LoadAssembly(byte[] dllBytes, byte[] pdbBytes);
         public abstract void Enter();
         public abstract void ShutDown();
         public abstract object CreateInstance(string typeName);

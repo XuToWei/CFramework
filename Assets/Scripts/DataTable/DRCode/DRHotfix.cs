@@ -28,7 +28,7 @@ namespace Game
                 return false;
             }
 
-            m_HotfixInstance = GameEntry.Hotfix.CreateHotfixInstance(hotfixDataTableUserData.DataTableName);
+            m_HotfixInstance = GameEntry.Hotfix.CreateInstance(hotfixDataTableUserData.DataTableName);
             m_IdPropertyInfo = m_HotfixInstance.GetType().GetProperty("Id");
             object parseDataRow =  GameEntry.Hotfix.GetMethod(hotfixDataTableUserData.DataTableName,"ParseDataRow",2);
 
@@ -49,7 +49,7 @@ namespace Game
             {
                 return false;
             }
-            m_HotfixInstance = GameEntry.Hotfix.CreateHotfixInstance(hotfixDataTableUserData.DataTableName);
+            m_HotfixInstance = GameEntry.Hotfix.CreateInstance(hotfixDataTableUserData.DataTableName);
             m_IdPropertyInfo = GameEntry.Hotfix.GetHotfixType(hotfixDataTableUserData.DataTableName).GetProperty("Id");
             object parseDataRow =  GameEntry.Hotfix.GetMethod(hotfixDataTableUserData.DataTableName,"ParseDataRow",4);
 

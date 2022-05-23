@@ -7,7 +7,7 @@ namespace Game
 {
     public interface IHotfixHelper
     {
-        void Load(Action loadCompletedAction);
+        void LoadAssembly(byte[] dllBytes, byte[] pdbBytes);
         void Enter();
         void ShutDown();
         object CreateInstance(string typeName);
