@@ -6,10 +6,11 @@ namespace Game
 
         public static readonly string[] DllNames = new[]
         {
-            "Hotfix",
-            "HotfixView",
-            "Module",
-            "ModuleView"
+            "Hotfix.Framework",
+            "Hotfix.Logic",
+            "Hotfix.LogicView",
+            "Hotfix.Model",
+            "Hotfix.ModelView"
         };
 
         public static readonly string EntryTypeFullName = "Hotfix.HotfixEntry";

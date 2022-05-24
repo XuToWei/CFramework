@@ -1,0 +1,18 @@
+{
+    "name": "Hotfix.Logic",
+    "rootNamespace": "",
+    "references": [
+        "GUID:2144f06db9c2249d18ff9fecc1189720"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

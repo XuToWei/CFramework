@@ -56,12 +56,12 @@ namespace Game
         
         public static string GetHotfixDllAsset(string assetName)
         {
-            return Utility.Text.Format("{0}{1}.dll.bytes", HotfixConfig.DllFolderPath, assetName);
+            return Utility.Text.Format("{0}Hotfix.{1}.dll.bytes", HotfixConfig.DllFolderPath, assetName);
         }
         
         public static string GetHotfixPdbAsset(string assetName)
         {
-            return Utility.Text.Format("{0}{1}.pdb.bytes", HotfixConfig.DllFolderPath, assetName);
+            return Utility.Text.Format("{0}Hotfix.{1}.pdb.bytes", HotfixConfig.DllFolderPath, assetName);
         }
     }
 }

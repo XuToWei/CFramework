@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using GameFramework.Resource;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -12,7 +13,7 @@ namespace Game
         private string m_HotfixHelperTypeName = "Game.ILRuntimeHelper";
         
         [SerializeField]
-        private DataTableHelperBase m_CustomHotfixHelper = null;
+        private HotfixHelperBase m_CustomHotfixHelper = null;
         
         private HotfixHelperBase m_HotfixHelper;
 
@@ -24,6 +25,8 @@ namespace Game
             private set;
             get;
         }
+        
+        public object HotfixGameEntry => m_HotfixHelper.HotfixGameEntry;
 
         private void Start()
         {
@@ -57,9 +60,9 @@ namespace Game
             m_HotfixHelper.Enter();
         }
 
-        public void Load(Action loadCompletedAction)
+        public async Task<bool> Load()
         {
-            m_HotfixHelper.Load(loadCompletedAction);
+            return await m_HotfixHelper.Load();
         }
 
         public void ShutDown()
@@ -92,16 +95,6 @@ namespace Game
             return m_HotfixHelper.GetHotfixType(typeName);
         }
 
-        public object GetHotfixGameEntry()
-        {
-            return m_HotfixHelper.GetHotfixGameEntry;
-        }
-
-        public T AddHotfixMonoBehaviour<T>(GameObject go, string hotfixFullTypeName) where T : MonoBehaviour
-        {
-            return m_HotfixHelper.CreateHotfixMonoBehaviour<T>(go, hotfixFullTypeName);
-        }
-        
         private void OnApplicationPause(bool pauseStatus)
         {
             HotfixLifeCircle?.OnApplicationPause?.Invoke(pauseStatus);
@@ -113,15 +106,12 @@ namespace Game
         }
 
 #if ILRuntime
-        public ILRuntime.Runtime.Enviorment.InvocationContext BeginInvoke(ILRuntime.CLR.Method.IMethod m)
+        public ILRuntime.Runtime.Enviorment.InvocationContext BeginInvokeMethod(ILRuntime.CLR.Method.IMethod m)
         {
-            return ((ILRuntimeHelper)m_HotfixHelper).BeginInvoke(m);
+            return ((ILRuntimeHelper)m_HotfixHelper).BeginInvokeMethod(m);
         }
 
-        public ILRuntime.Runtime.Enviorment.AppDomain GetAppDomain()
-        {
-            return ((ILRuntimeHelper)m_HotfixHelper).AppDomain;
-        }
+        public ILRuntime.Runtime.Enviorment.AppDomain AppDomain => ((ILRuntimeHelper)m_HotfixHelper).AppDomain;
 #endif
     }
 }

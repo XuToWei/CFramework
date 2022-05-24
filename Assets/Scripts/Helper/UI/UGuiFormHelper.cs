@@ -40,11 +40,6 @@ namespace Game
             Transform transform = gameObject.transform;
             transform.SetParent(((MonoBehaviour)uiGroup.Helper).transform);
             transform.localScale = Vector3.one;
-            HotfixUGuiForm hotfix = gameObject.GetComponent<HotfixUGuiForm>();
-            if (hotfix!= null)
-            {
-                hotfix.GetOrAddUIFormLogic();
-            }
             return gameObject.GetOrAddComponent<UIForm>();
         }
 

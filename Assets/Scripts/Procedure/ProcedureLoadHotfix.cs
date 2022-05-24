@@ -7,11 +7,12 @@ namespace Game
     {
         private bool m_IsLoaded;
         
+        // ReSharper disable Unity.PerformanceAnalysis
         protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)
         {
             base.OnEnter(procedureOwner);
             m_IsLoaded = false;
-            GameEntry.Hotfix.Load(OnLoadHotfixCompleted);
+            GameEntry.Hotfix.Load();
         }
 
         private void OnLoadHotfixCompleted()

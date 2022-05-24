@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Reflection;
 using GameFramework;
+using GameFramework.Resource;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -10,21 +13,14 @@ namespace Game
 {
     public class MonoHelper : HotfixHelperBase
     {
-        private Assembly m_Assembly;
+        private Assembly m_EnterAssembly;
         private Action<float,float> m_Update;
         private MethodInfo m_Shutdown;
         private Action<bool> m_ApplicationPause;
         private MethodInfo m_ApplicationQuit;
-        private List<Type> m_HotfixTypes;
+        private readonly List<Type> m_HotfixTypes = new List<Type>();
         private object m_HotfixGameEntry;
-        public override object GetHotfixGameEntry => m_HotfixGameEntry;
-
-        public override T CreateHotfixMonoBehaviour<T>(GameObject go,string hotfixFullTypeName)
-        {
-            Type type = GetHotfixType(hotfixFullTypeName);
-            T instance = go.AddComponent(type) as T;
-            return instance;
-        }
+        public override object HotfixGameEntry => m_HotfixGameEntry;
 
         public override Type GetHotfixType(string hotfixTypeFullName)
         {
@@ -36,39 +32,50 @@ namespace Game
             return m_HotfixTypes;
         }
 
-        public override async void Load(Action loadCompletedAction)
+        public override async Task<bool> Load()
         {
             foreach (var dllName in HotfixConfig.DllNames)
             {
-                TextAsset dllAsset = await GameEntry.Resource.LoadAssetAsync<TextAsset>(AssetUtility.GetHotfixDllAsset("Hotfix"));
-                byte[] dll = dllAsset.bytes;
-                Log.Info(Utility.Text.Format("{0} dll加载完毕", dllName));
-                TextAsset pdbAsset = await GameEntry.Resource.LoadAssetAsync<TextAsset>(AssetUtility.GetHotfixPdbAsset("Hotfix"));
-                if (pdbAsset != null)
+                string dllAssetName = AssetUtility.GetHotfixDllAsset(dllName);
+                TextAsset dllAsset = await GameEntry.Resource.LoadAssetAsync<TextAsset>(dllAssetName);
+                string pdbAssetName = AssetUtility.GetHotfixPdbAsset(dllName);
+                Assembly assembly;
+                if (GameEntry.Resource.HasAsset(pdbAssetName) == HasAssetResult.NotExist)
                 {
-                    byte[] pdb = pdbAsset.bytes;
-                    Log.Info(Utility.Text.Format("{0} pdb加载完毕", dllName));
-                    m_Assembly = Assembly.Load(dll, pdb);
+                    assembly = Assembly.Load(dllAsset.bytes);
+                }
+                else
+                {
+                    TextAsset pdbAsset = await GameEntry.Resource.LoadAssetAsync<TextAsset>(pdbAssetName);
+                    assembly = Assembly.Load(dllAsset.bytes, pdbAsset.bytes);
+                }
+                
+                m_HotfixTypes.AddRange(assembly.GetTypes());
+                if (string.Equals(dllName, "Framework"))
+                {
+                    m_EnterAssembly = assembly;
                 }
             }
-            m_HotfixTypes = m_Assembly.GetTypes().ToList();
-            loadCompletedAction?.Invoke();
-            Log.Info("mono加载完毕");
+
+            Log.Info("Hotfix load completed!");
+            var tcs = new TaskCompletionSource<bool>();
+            tcs.SetResult(true);
+            return await tcs.Task;
         }
 
         public override void Enter()
         {
-            Type hotfixInit = m_Assembly.GetType(HotfixConfig.EntryTypeFullName);
+            Type hotfixInit = m_EnterAssembly.GetType(HotfixConfig.EntryTypeFullName);
             m_HotfixGameEntry = Activator.CreateInstance(hotfixInit);
-            var start = hotfixInit.GetMethod("Start",BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            var update = hotfixInit.GetMethod("Update",BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            MethodInfo start = hotfixInit.GetMethod("Start", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            MethodInfo update = hotfixInit.GetMethod("Update", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             if (update != null)
                 m_Update = (Action<float, float>)Delegate.CreateDelegate(typeof(Action<float, float>), m_HotfixGameEntry, update);
-            m_Shutdown = hotfixInit.GetMethod("Shutdown",BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            var applicationPause = hotfixInit.GetMethod("OnApplicationPause",BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            m_Shutdown = hotfixInit.GetMethod("Shutdown", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            MethodInfo applicationPause = hotfixInit.GetMethod("OnApplicationPause", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             if (applicationPause != null)
                 m_ApplicationPause = (Action<bool>)Delegate.CreateDelegate(typeof(Action<bool>), m_HotfixGameEntry, applicationPause);
-            m_ApplicationQuit = hotfixInit.GetMethod("OnApplicationQuit",BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            m_ApplicationQuit = hotfixInit.GetMethod("OnApplicationQuit", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             start?.Invoke(m_HotfixGameEntry, null);
         }
 

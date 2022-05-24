@@ -14,17 +14,6 @@ namespace Game
         /// </summary>
         [SerializeField] private string m_HotfixFormName;
 
-        public UGuiForm GetOrAddUIFormLogic()
-        {
-            UGuiForm uGuiForm = gameObject.GetComponent<UGuiForm>();
-            if (uGuiForm == null)
-            {
-                string hotfixUGuiFormFullName =
-                    Utility.Text.Format("{0}.{1}", "Hotfix", m_HotfixFormName);
-                uGuiForm = gameObject.AddHotfixMonoBehaviour<UGuiForm>(hotfixUGuiFormFullName);
-            }
-
-            return uGuiForm;
-        }
+        
     }
 }
