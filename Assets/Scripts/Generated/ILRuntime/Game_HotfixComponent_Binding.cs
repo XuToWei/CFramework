@@ -78,9 +78,9 @@ namespace ILRuntime.Runtime.Generated
             Game.HotfixComponent instance_of_this_method = (Game.HotfixComponent)typeof(Game.HotfixComponent).CheckCLRTypes(StackObject.ToObject(ptr_of_this_method, __domain, __mStack), (CLR.Utils.Extensions.TypeFlags)0);
             __intp.Free(ptr_of_this_method);
 
-            var result_of_this_method = instance_of_this_method.GetAllTypes();
+           
 
-            return ILIntepreter.PushObject(__ret, __mStack, result_of_this_method);
+            return ILIntepreter.PushObject(__ret, __mStack, null);
         }
 
 

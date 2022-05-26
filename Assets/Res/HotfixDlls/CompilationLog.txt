@@ -1,2 +1,0 @@
-# Starting compiling Hotfix.dll
-C:\Softwares\Unity\2020.3.32f1c1\Editor\Data\Tools\RoslynScripts\unity_csc.bat /noconfig @Temp/UnityTempFile-d9cdadd4150282342825f630155673db

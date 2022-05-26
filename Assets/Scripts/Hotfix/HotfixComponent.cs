@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GameFramework;
 using GameFramework.Resource;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -30,7 +31,7 @@ namespace Game
 
         private void Start()
         {
-            if (GameEntry.Base.EditorResourceMode && GameEntry.Resource.ResourceMode != ResourceMode.Package)
+            if (!GameEntry.Base.EditorResourceMode)
             {
                 m_HotfixHelperTypeName = "Game.ILRuntimeHelper";
             }
@@ -55,19 +56,24 @@ namespace Game
             HotfixLifeCircle = new HotfixLifeCircle(start, update, shutDown, onApplicationPause, onApplicationQuit);
         }
 
-        public void Enter()
+        public void OnEnter()
         {
-            m_HotfixHelper.Enter();
+            m_HotfixHelper.OnEnter();
+        }
+        
+        public void OnShutDown()
+        {
+            m_HotfixHelper.OnShutDown();
         }
 
-        public async Task<bool> Load()
+        public void OnUpdate(float elapseSeconds, float realElapseSeconds)
         {
-            return await m_HotfixHelper.Load();
+            m_HotfixHelper.OnUpdate(elapseSeconds, realElapseSeconds);
         }
 
-        public void ShutDown()
+        public async Task Load()
         {
-            m_HotfixHelper.ShutDown();
+            await m_HotfixHelper.Load();
         }
 
         public object CreateInstance(string typeName)
@@ -85,25 +91,26 @@ namespace Game
             return m_HotfixHelper.InvokeMethod(method, instance, objects);
         }
 
-        public List<Type> GetAllTypes()
-        {
-            return m_HotfixHelper.GetAllTypes();
-        }
-
         public Type GetHotfixType(string typeName)
         {
             return m_HotfixHelper.GetHotfixType(typeName);
         }
 
-        private void OnApplicationPause(bool pauseStatus)
+#if UNITY_EDITOR
+        public bool IsMonoHelper()
         {
-            HotfixLifeCircle?.OnApplicationPause?.Invoke(pauseStatus);
+            return m_HotfixHelperTypeName == "Game.MonoHelper";
         }
-
-        private void OnApplicationQuit()
+        
+        public void Reload()
         {
-            HotfixLifeCircle?.OnApplicationQuit?.Invoke();
+            if (!IsMonoHelper())
+            {
+                throw new GameFrameworkException(Utility.Text.Format("[0] can't reload, can use Game.MonoHelper to reload!", m_HotfixHelperTypeName));
+            }
+            ((MonoHelper)m_HotfixHelper).Reload();
         }
+#endif
 
 #if ILRuntime
         public ILRuntime.Runtime.Enviorment.InvocationContext BeginInvokeMethod(ILRuntime.CLR.Method.IMethod m)

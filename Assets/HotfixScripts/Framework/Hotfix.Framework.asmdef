@@ -2,7 +2,9 @@
     "name": "Hotfix.Framework",
     "rootNamespace": "",
     "references": [
-        "GUID:7a8092ee3de0dde4da9cc61d338cdeb5"
+        "GUID:7a8092ee3de0dde4da9cc61d338cdeb5",
+        "GUID:363c5eb08ff8e6a439b85e37b8c20d96",
+        "GUID:cc4dd0bebcbf34995af5295b15c13f0b"
     ],
     "includePlatforms": [
         "Editor"

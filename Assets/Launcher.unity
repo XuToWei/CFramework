@@ -1162,7 +1162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 288efa672fe14a17a32bf2741743b4e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_HotfixHelperTypeName: Game.ILRuntimeHelper
+  m_HotfixHelperTypeName: Game.MonoHelper
   m_CustomHotfixHelper: {fileID: 0}
 --- !u!4 &1795846457 stripped
 Transform:

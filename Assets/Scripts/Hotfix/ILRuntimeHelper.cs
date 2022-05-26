@@ -43,15 +43,7 @@ namespace Game
             return m_HotfixTypes.Find(x => x.FullName != null && x.FullName.Equals(hotfixTypeFullName));
         }
 
-        /// <summary>
-        /// 获取所有热更新层类的Type对象
-        /// </summary>
-        public override List<Type> GetAllTypes()
-        {
-            return m_HotfixTypes;
-        }
-
-        public override async Task<bool> Load()
+        public override async Task Load()
         {
             m_AppDomain = new AppDomain(ILRuntimeJITFlags.JITOnDemand);
             foreach (var dllName in HotfixConfig.DllNames)
@@ -84,20 +76,17 @@ namespace Game
             };
             
             Log.Info("Hotfix load completed!");
-            var tcs = new TaskCompletionSource<bool>();
-            tcs.SetResult(true);
-            return await tcs.Task;
         }
 
-        public override void Enter()
+        public override void OnEnter()
         {
             string typeFullName = HotfixConfig.EntryTypeFullName;
             m_HotfixGameEntry = (ILTypeInstance)CreateInstance(typeFullName);
-            IMethod ilEnter = (IMethod)GetMethod(typeFullName, "Enter", 0);
+            IMethod ilEnter = (IMethod)GetMethod(typeFullName, "OnEnter", 0);
             InvokeMethod(ilEnter, m_HotfixGameEntry);
         }
 
-        public override void ShutDown()
+        public override void OnShutDown()
         {
             if (m_Shutdown == null)
             {
@@ -105,6 +94,20 @@ namespace Game
             }
 
             InvokeMethod(m_Shutdown, m_HotfixGameEntry);
+        }
+
+        public override void OnUpdate(float elapseSeconds, float realElapseSeconds)
+        {
+            if (m_Update == null)
+            {
+                return;
+            }
+
+            using var ctx = BeginInvokeMethod(m_Update);
+            ctx.PushObject(m_HotfixGameEntry);
+            ctx.PushFloat(elapseSeconds);
+            ctx.PushFloat(realElapseSeconds);
+            ctx.Invoke();
         }
 
         public override object CreateInstance(string typeName)
@@ -128,19 +131,6 @@ namespace Game
         public InvocationContext BeginInvokeMethod(IMethod m)
         {
             return AppDomain.BeginInvoke(m);
-        }
-        private void Update()
-        {
-            if (m_Update == null)
-            {
-                return;
-            }
-
-            using var ctx = BeginInvokeMethod(m_Update);
-            ctx.PushObject(m_HotfixGameEntry);
-            ctx.PushFloat(Time.deltaTime);
-            ctx.PushFloat(Time.unscaledDeltaTime);
-            ctx.Invoke();
         }
 
         private void OnApplicationPause(bool pauseStatus)

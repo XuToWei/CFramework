@@ -1,10 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using GameFramework;
+using GameFramework.Resource;
 using UnityEditor;
 using UnityEditor.Compilation;
 using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace Game.Editor.Hotfix
 {
@@ -15,12 +17,6 @@ namespace Game.Editor.Hotfix
         /// 最原始的程序集路径
         /// </summary>
         private static readonly string s_OriginDllPath = "Library/ScriptAssemblies/";
-
-        private static readonly string[] s_HotfixReloadScriptPaths = new string[]
-        {
-            "",
-            "Assets/HotfixScripts/LogicView/",
-        };
 
         private static string GetOriginDllFullPath(string fileName)
         {
@@ -55,11 +51,31 @@ namespace Game.Editor.Hotfix
             AssetDatabase.Refresh();
         }
 
-        [MenuItem("Tools/Hotfix/Reload", false, 30)]
-        public static void HotfixReload()
+        [MenuItem("Tools/Hotfix/Reload _R", false, 30)]
+        public static async void HotfixReload()
         {
-            BuildHotfixAssembly("Hotfix.Logic", GetScriptPaths("Assets/HotfixScripts/Logic/"));
-            BuildHotfixAssembly("Hotfix.LogicView", GetScriptPaths("Assets/HotfixScripts/LogicView/"));
+            if (!EditorApplication.isPlaying)
+            {
+                Debug.LogError("Reload can only run when editor is playing!");
+                return;
+            }
+
+            if (!GameEntry.Base.EditorResourceMode)
+            {
+                Debug.LogError("Reload can only use by EditorResourceMode!");
+                return;
+            }
+
+            if (!GameEntry.Hotfix.IsMonoHelper())
+            {
+                Debug.LogError("Reload can only use by Game.MonoHelper!");
+                return;
+            }
+            BuildHotfixAssembly("Hotfix.Framework2", GetScriptPaths("Assets/HotfixScripts/Framework/"));
+            BuildHotfixAssembly("Hotfix.Logic2", GetScriptPaths("Assets/HotfixScripts/Logic/"));
+            BuildHotfixAssembly("Hotfix.LogicView2", GetScriptPaths("Assets/HotfixScripts/LogicView/"));
+            GameEntry.Hotfix.Reload();
+            Debug.Log("Hotfix reload completed!");
         }
 
         private static string[] GetScriptPaths(string path)
@@ -77,12 +93,17 @@ namespace Game.Editor.Hotfix
 
         private static void BuildHotfixAssembly(string dllName, string[] scripts)
         {
-            string dllFullPath = GetOriginDllFullPath(dllName);
-            if (File.Exists(dllFullPath))
+            if (scripts == null || scripts.Length < 1)
             {
-                File.Delete(dllFullPath);
+                return;
             }
-            AssemblyBuilder assemblyBuilder = new AssemblyBuilder(dllFullPath, scripts);
+            string dllFullName = Utility.Text.Format("Temp/{0}.dll", dllName);
+            if (File.Exists(dllFullName))
+            {
+                File.Delete(dllFullName);
+            }
+            AssemblyBuilder assemblyBuilder = new AssemblyBuilder(dllFullName, scripts);
+            assemblyBuilder.buildStarted += Debug.Log;
             assemblyBuilder.buildFinished += (s, messages) =>
             {
                 foreach (CompilerMessage message in messages)
@@ -103,11 +124,21 @@ namespace Game.Editor.Hotfix
             };
             if (assemblyBuilder.Build())
             {
-                SyncHotfixDllPdb(dllName);
+                while (EditorApplication.isCompiling)
+                {
+                    // 主线程sleep并不影响编译线程
+                    Thread.Sleep(20);
+                }
+                string dllDesFullName = AssetUtility.GetHotfixDllAsset(dllName);
+                File.Copy(dllFullName, dllDesFullName, true);
+                File.Delete(dllFullName);
+                AssetDatabase.ImportAsset(dllDesFullName);
+                AssetDatabase.Refresh();
+                Debug.LogFormat("{0} build success!", dllName);
             }
             else
             {
-                Debug.LogErrorFormat("Reload {0} Error!", dllName);
+                Debug.LogErrorFormat("Build {0} Error!", dllName);
             }
         }
     }
