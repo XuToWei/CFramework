@@ -7,7 +7,7 @@
 
 using System;
 
-namespace Hotfix
+namespace Hotfix.Framework
 {
     /// <summary>
     /// 数据提供者接口。

@@ -1,38 +1,49 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Reflection;
 using GameFramework;
 using GameFramework.Resource;
-using UnityEditor;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Game
 {
-    public class MonoHelper : HotfixHelperBase
+    public class HotfixMono : BaseHotfixHelper
     {
-        private Action m_OnEnter;
-        private Action<float,float> m_OnUpdate;
-        private Action m_OnShutdown;
-        private Action<bool> m_OnApplicationPause;
-        private Action m_OnApplicationQuit;
+        public override HotfixType HotfixType => HotfixType.Mono;
         
         private readonly Dictionary<string, Type> m_HotfixTypeDict = new();
-        private object m_HotfixGameEntry;
-        public override object HotfixGameEntry => m_HotfixGameEntry;
 
-        public override Type GetHotfixType(string hotfixTypeFullName)
+        private Type m_EntryType;
+        private object m_EntryInstance;
+        private Action m_OnEnterMethodAction;
+        private Action m_ShutDownMethodAction;
+        private Action<float, float> m_OnUpdateMethodAction;
+        private Action<bool> m_OnApplicationPauseMethodAction;
+        private Action<bool> m_OnApplicationFocusMethodAction;
+        private Action m_OnApplicationQuitMethodAction;
+
+        public Type GetHotfixType(string hotfixTypeFullName)
         {
             if (m_HotfixTypeDict.TryGetValue(hotfixTypeFullName, out Type hotfixType))
             {
                 return hotfixType;
             }
-
             throw new GameFrameworkException(Utility.Text.Format("HotfixType [{0}] get fail!", hotfixTypeFullName));
         }
         
+        public object CreateInstance(Type type)
+        {
+            return Activator.CreateInstance(type);
+        }
+
+        public T CreateMethodAction<T>(Type hotfixType,object instance, string methodName) where T : Delegate
+        {
+            MethodInfo methodInfo = hotfixType.GetMethod(methodName);
+            return (T)Delegate.CreateDelegate(typeof(T), instance, methodInfo);
+        }
+
         public override async Task Load()
         {
             foreach (var dllName in HotfixConfig.DllNames)
@@ -52,15 +63,58 @@ namespace Game
                 }
                 foreach (var type in assembly.GetTypes())
                 {
-                    if (type.FullName != null)
+                    if (!string.IsNullOrEmpty(type.FullName))
                     {
                         m_HotfixTypeDict[type.FullName] = type;
                     }
                 }
             }
-            Log.Info("Hotfix load completed!");
+            
+            Log.Info("Hotfix mono load completed!");
+        }
+        
+        public override void Init()
+        {
+            m_EntryType = GetHotfixType(HotfixConfig.EntryTypeFullName);
+            m_EntryInstance = CreateInstance(m_EntryType);
+            m_OnEnterMethodAction = CreateMethodAction<Action>(m_EntryType, m_EntryInstance, "OnEnter");
+            m_ShutDownMethodAction = CreateMethodAction<Action>(m_EntryType, m_EntryInstance, "OnShutDown");
+            m_OnUpdateMethodAction = CreateMethodAction<Action<float, float>>(m_EntryType, m_EntryInstance, "OnUpdate");
+            m_OnApplicationPauseMethodAction = CreateMethodAction<Action<bool>>(m_EntryType, m_EntryInstance, "OnApplicationPause");
+            m_OnApplicationFocusMethodAction = CreateMethodAction<Action<bool>>(m_EntryType, m_EntryInstance, "OnApplicationFocus");
+            m_OnApplicationQuitMethodAction = CreateMethodAction<Action>(m_EntryType, m_EntryInstance, "OnApplicationQuit");
         }
 
+        public override void OnEnter()
+        {
+            m_OnEnterMethodAction.Invoke();
+        }
+
+        public override void OnShutDown()
+        {
+            m_ShutDownMethodAction.Invoke();
+        }
+
+        public override void OnUpdate(float elapseSeconds, float realElapseSeconds)
+        {
+            m_OnUpdateMethodAction.Invoke(elapseSeconds, realElapseSeconds);
+        }
+
+        public override void OnApplicationPause(bool pauseStatus)
+        {
+            m_OnApplicationPauseMethodAction.Invoke(pauseStatus);
+        }
+
+        public override void OnApplicationFocus(bool hasFocus)
+        {
+            m_OnApplicationPauseMethodAction.Invoke(hasFocus);
+        }
+
+        public override void OnApplicationQuit()
+        {
+            m_OnApplicationQuitMethodAction.Invoke();
+        }
+        
 #if UNITY_EDITOR
         public void Reload()
         {
@@ -87,97 +141,7 @@ namespace Game
                     }
                 }
             }
-            LoadLogic();
         }
 #endif
-
-        private void LoadLogic()
-        {
-            Type hotfixInit = GetHotfixType(HotfixConfig.EntryTypeFullName);
-            m_HotfixGameEntry = Activator.CreateInstance(hotfixInit);
-            
-            MethodInfo onEnter = hotfixInit.GetMethod("OnEnter", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            if (onEnter == null)
-            {
-                throw new GameFrameworkException("HotfixEntry get [OnEnter] method fail!");
-            }
-            m_OnEnter = (Action)Delegate.CreateDelegate(typeof(Action), m_HotfixGameEntry, onEnter);
-            
-            MethodInfo onUpdate = hotfixInit.GetMethod("OnUpdate", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            if (onUpdate == null)
-            {
-                throw new GameFrameworkException("HotfixEntry get [OnUpdate] method fail!");
-            }
-            m_OnUpdate = (Action<float, float>)Delegate.CreateDelegate(typeof(Action<float, float>), m_HotfixGameEntry, onUpdate);
-
-            MethodInfo onShutDown = hotfixInit.GetMethod("OnShutdown", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            if (onShutDown == null)
-            {
-                throw new GameFrameworkException("HotfixEntry get [OnShutdown] method fail!");
-            }
-            m_OnShutdown = (Action)Delegate.CreateDelegate(typeof(Action), m_HotfixGameEntry, onShutDown);
-            
-            MethodInfo onApplicationPause = hotfixInit.GetMethod("OnApplicationPause", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            if (onApplicationPause == null)
-            {
-                throw new GameFrameworkException("HotfixEntry get [OnApplicationPause] method fail!");
-            }
-            m_OnApplicationPause = (Action<bool>)Delegate.CreateDelegate(typeof(Action<bool>), m_HotfixGameEntry, onApplicationPause);
-            
-            MethodInfo onApplicationQuit = hotfixInit.GetMethod("OnApplicationQuit", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            if (onApplicationQuit == null)
-            {
-                throw new GameFrameworkException("HotfixEntry get [OnApplicationQuit] method fail!");
-            }
-            m_OnApplicationQuit = (Action)Delegate.CreateDelegate(typeof(Action), m_HotfixGameEntry, onApplicationQuit);
-        }
-
-        public override void OnEnter()
-        {
-            LoadLogic();
-            m_OnEnter.Invoke();
-        }
-
-        public override void OnShutDown()
-        {
-            m_OnShutdown.Invoke();
-        }
-
-        public override void OnUpdate(float elapseSeconds, float realElapseSeconds)
-        {
-            m_OnUpdate.Invoke(elapseSeconds, realElapseSeconds);
-        }
-
-        public override object CreateInstance(string typeName)
-        {
-            Type type = GetHotfixType(typeName);
-            object hotfixInstance = Activator.CreateInstance(type);
-            return hotfixInstance;
-        }
-
-        public override object GetMethod(string typeName, string methodName, int paramCount)
-        {
-            Type type = GetHotfixType(typeName);
-            return type
-                .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
-                .Where(x => x.Name == methodName)
-                .FirstOrDefault(x => x.GetParameters().Length == paramCount);
-        }
-
-        public override object InvokeMethod(object method, object instance, params object[] objects)
-        {
-            MethodInfo methodInfo = (MethodInfo)method;
-            return methodInfo.Invoke(instance, objects);
-        }
-
-        private void OnApplicationPause(bool pauseStatus)
-        {
-            m_OnApplicationPause.Invoke(pauseStatus);
-        }
-
-        private void OnApplicationQuit()
-        {
-            m_OnApplicationQuit.Invoke();
-        }
     }
 }

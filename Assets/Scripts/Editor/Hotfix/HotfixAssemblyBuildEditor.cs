@@ -66,7 +66,7 @@ namespace Game.Editor.Hotfix
                 return;
             }
 
-            if (!GameEntry.Hotfix.IsMonoHelper())
+            if (GameEntry.Hotfix.HotfixType != HotfixType.Mono)
             {
                 Debug.LogError("Reload can only use by Game.MonoHelper!");
                 return;

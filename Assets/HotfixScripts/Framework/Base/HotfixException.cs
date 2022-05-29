@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Hotfix
+namespace Hotfix.Framework
 {
     /// <summary>
     /// 游戏框架异常类。

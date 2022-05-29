@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace Hotfix
+namespace Hotfix.Framework
 {
     /// <summary>
     /// 读取数据更新事件。

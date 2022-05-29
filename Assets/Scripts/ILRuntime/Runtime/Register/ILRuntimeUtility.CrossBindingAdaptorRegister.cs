@@ -1,5 +1,4 @@
 using ILRuntime.Runtime.Enviorment;
-using ILR;
 
 namespace Game
 {
@@ -9,8 +8,8 @@ namespace Game
         public static void RegisterCrossBindingAdaptor(AppDomain appDomain)
         {
             //注册跨域继承适配器
-            appDomain.RegisterCrossBindingAdaptor(new UGuiFormAdapter());
-            appDomain.RegisterCrossBindingAdaptor(new EntityLogicAdapter());
+            // appDomain.RegisterCrossBindingAdaptor(new UGuiFormAdapter());
+            // appDomain.RegisterCrossBindingAdaptor(new EntityLogicAdapter());
         }
     }
 }

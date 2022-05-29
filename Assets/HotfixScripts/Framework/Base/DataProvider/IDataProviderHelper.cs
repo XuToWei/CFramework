@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace Hotfix
+namespace Hotfix.Framework
 {
     /// <summary>
     /// 数据提供者辅助器接口。

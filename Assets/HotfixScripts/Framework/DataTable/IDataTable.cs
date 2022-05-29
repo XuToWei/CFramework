@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Hotfix
+namespace Hotfix.Framework
 {
     /// <summary>
     /// 数据表接口。

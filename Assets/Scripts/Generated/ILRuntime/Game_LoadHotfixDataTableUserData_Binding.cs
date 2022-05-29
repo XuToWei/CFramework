@@ -21,14 +21,7 @@ namespace ILRuntime.Runtime.Generated
             BindingFlags flag = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
             MethodBase method;
             Type[] args;
-            Type type = typeof(Game.LoadHotfixDataTableUserData);
-            args = new Type[]{};
-            method = type.GetMethod("get_UserData", flag, null, args, null);
-            app.RegisterCLRMethodRedirection(method, get_UserData_0);
-
-            args = new Type[]{typeof(System.String), typeof(System.Object)};
-            method = type.GetConstructor(flag, null, args, null);
-            app.RegisterCLRMethodRedirection(method, Ctor_0);
+            
 
         }
 
@@ -40,17 +33,8 @@ namespace ILRuntime.Runtime.Generated
             StackObject* __ret = ILIntepreter.Minus(__esp, 1);
 
             ptr_of_this_method = ILIntepreter.Minus(__esp, 1);
-            Game.LoadHotfixDataTableUserData instance_of_this_method = (Game.LoadHotfixDataTableUserData)typeof(Game.LoadHotfixDataTableUserData).CheckCLRTypes(StackObject.ToObject(ptr_of_this_method, __domain, __mStack), (CLR.Utils.Extensions.TypeFlags)0);
-            __intp.Free(ptr_of_this_method);
-
-            var result_of_this_method = instance_of_this_method.UserData;
-
-            object obj_result_of_this_method = result_of_this_method;
-            if(obj_result_of_this_method is CrossBindingAdaptorType)
-            {    
-                return ILIntepreter.PushObject(__ret, __mStack, ((CrossBindingAdaptorType)obj_result_of_this_method).ILInstance, true);
-            }
-            return ILIntepreter.PushObject(__ret, __mStack, result_of_this_method, true);
+            
+            return ILIntepreter.PushObject(__ret, __mStack, null, true);
         }
 
 
@@ -68,9 +52,9 @@ namespace ILRuntime.Runtime.Generated
             __intp.Free(ptr_of_this_method);
 
 
-            var result_of_this_method = new Game.LoadHotfixDataTableUserData(@dataTableName, @userData);
+            
 
-            return ILIntepreter.PushObject(__ret, __mStack, result_of_this_method);
+            return ILIntepreter.PushObject(__ret, __mStack, null);
         }
 
 

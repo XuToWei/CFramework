@@ -12,6 +12,7 @@ namespace Game
             base.OnEnter(procedureOwner);
             m_IsLoaded = false;
             await GameEntry.Hotfix.Load();
+            GameEntry.Hotfix.Init();
             m_IsLoaded = true;
         }
 

@@ -10,31 +10,37 @@ namespace Game
 {
     public class HotfixComponent : GameFrameworkComponent
     {
-        [SerializeField]
-        private string m_HotfixHelperTypeName = "Game.ILRuntimeHelper";
-        
-        [SerializeField]
-        private HotfixHelperBase m_CustomHotfixHelper = null;
-        
-        private HotfixHelperBase m_HotfixHelper;
+        [SerializeField] private string m_HotfixHelperTypeName;
+        [SerializeField] private BaseHotfixHelper m_HotfixHelper;
 
-        /// <summary>
-        /// 更新层生命周期
-        /// </summary>
-        public HotfixLifeCircle HotfixLifeCircle
+        public HotfixType HotfixType
         {
             private set;
             get;
         }
         
-        public object HotfixGameEntry => m_HotfixHelper.HotfixGameEntry;
+#if ILRuntime
+        public HotfixILRuntime ILRuntime
+        {
+            private set;
+            get;
+        }
+#endif
+
+        public HotfixMono Mono
+        {
+            private set;
+            get;
+        }
 
         private void Start()
         {
+#if ILRuntime
             if (!GameEntry.Base.EditorResourceMode)
             {
                 m_HotfixHelperTypeName = "Game.ILRuntimeHelper";
             }
+#endif
             m_HotfixHelper = Helper.CreateHelper(m_HotfixHelperTypeName, m_HotfixHelper);
             if (m_HotfixHelper == null)
             {
@@ -42,18 +48,35 @@ namespace Game
                 return;
             }
 
+            HotfixType = m_HotfixHelper.HotfixType;
             m_HotfixHelper.name = "Hotfix Helper";
             Transform customHelperTrans = m_HotfixHelper.transform;
             customHelperTrans.SetParent(transform);
             customHelperTrans.localPosition = Vector3.zero;
             customHelperTrans.localScale = Vector3.one;
+            switch (HotfixType)
+            {
+                case HotfixType.Undefined:
+                    throw new GameFrameworkException("HotfixType Undefined!");
+                case HotfixType.Mono:
+                    Mono = m_HotfixHelper as HotfixMono;
+                    break;
+#if ILRuntime
+                case HotfixType.ILRuntime:
+                    ILRuntime = m_HotfixHelper as HotfixILRuntime;
+                    break;
+#endif
+            }
+        }
+        
+        public async Task Load()
+        {
+            await m_HotfixHelper.Load();
         }
 
-        public void SetLifeCircleAction(Action start, Action<float, float> update,
-            Action shutDown, Action<bool> onApplicationPause,
-            Action onApplicationQuit)
+        public void Init()
         {
-            HotfixLifeCircle = new HotfixLifeCircle(start, update, shutDown, onApplicationPause, onApplicationQuit);
+            m_HotfixHelper.Init();
         }
 
         public void OnEnter()
@@ -71,54 +94,31 @@ namespace Game
             m_HotfixHelper.OnUpdate(elapseSeconds, realElapseSeconds);
         }
 
-        public async Task Load()
+        private void OnApplicationQuit()
         {
-            await m_HotfixHelper.Load();
+            m_HotfixHelper?.OnApplicationQuit();
         }
 
-        public object CreateInstance(string typeName)
+        private void OnApplicationPause(bool pauseStatus)
         {
-            return m_HotfixHelper.CreateInstance(typeName);
+            m_HotfixHelper?.OnApplicationPause(pauseStatus);
         }
 
-        public object GetMethod(string typeName, string methodName, int paramCount)
+        private void OnApplicationFocus(bool hasFocus)
         {
-            return m_HotfixHelper.GetMethod(typeName, methodName, paramCount);
-        }
-
-        public object InvokeMethod(object method, object instance, params object[] objects)
-        {
-            return m_HotfixHelper.InvokeMethod(method, instance, objects);
-        }
-
-        public Type GetHotfixType(string typeName)
-        {
-            return m_HotfixHelper.GetHotfixType(typeName);
+            m_HotfixHelper?.OnApplicationPause(hasFocus);
         }
 
 #if UNITY_EDITOR
-        public bool IsMonoHelper()
-        {
-            return m_HotfixHelperTypeName == "Game.MonoHelper";
-        }
-        
+
         public void Reload()
         {
-            if (!IsMonoHelper())
+            if (m_HotfixHelper is not HotfixMono mono)
             {
                 throw new GameFrameworkException(Utility.Text.Format("[0] can't reload, can use Game.MonoHelper to reload!", m_HotfixHelperTypeName));
             }
-            ((MonoHelper)m_HotfixHelper).Reload();
+            mono.Reload();
         }
-#endif
-
-#if ILRuntime
-        public ILRuntime.Runtime.Enviorment.InvocationContext BeginInvokeMethod(ILRuntime.CLR.Method.IMethod m)
-        {
-            return ((ILRuntimeHelper)m_HotfixHelper).BeginInvokeMethod(m);
-        }
-
-        public ILRuntime.Runtime.Enviorment.AppDomain AppDomain => ((ILRuntimeHelper)m_HotfixHelper).AppDomain;
 #endif
     }
 }

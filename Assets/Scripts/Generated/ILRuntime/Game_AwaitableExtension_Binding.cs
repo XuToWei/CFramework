@@ -59,9 +59,9 @@ namespace ILRuntime.Runtime.Generated
             __intp.Free(ptr_of_this_method);
 
 
-            var result_of_this_method = Game.AwaitableExtension.LoadHotfixDataTableAsync(@dataTableComponent, @dataTableName, @dataTableAssetName, @userData);
+            //var result_of_this_method = Game.AwaitableExtension.LoadHotfixDataTableAsync(@dataTableComponent, @dataTableName, @dataTableAssetName, @userData);
 
-            return ILIntepreter.PushObject(__ret, __mStack, result_of_this_method);
+            return ILIntepreter.PushObject(__ret, __mStack, null);
         }
 
         static StackObject* OpenUIFormAsync_1(ILIntepreter __intp, StackObject* __esp, IList<object> __mStack, CLRMethod __method, bool isNewObj)

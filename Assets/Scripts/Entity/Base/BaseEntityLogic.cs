@@ -1,9 +1,10 @@
 ﻿using GameFramework;
 using UnityEngine;
+using UnityGameFramework.Runtime;
 
 namespace Game
 {
-    public abstract class EntityLogic : UnityGameFramework.Runtime.EntityLogic
+    public abstract class BaseEntityLogic : EntityLogic
     {
         public int Id => Entity.Id;
 
@@ -32,7 +33,9 @@ namespace Game
 #endif
         {
             base.OnShow(userData);
+#if UNITY_EDITOR
             Name = Utility.Text.Format("[Entity {0}]", Id.ToString());
+#endif
         }
 
 #if UNITY_2017_3_OR_NEWER
@@ -45,7 +48,7 @@ namespace Game
         }
 
 #if UNITY_2017_3_OR_NEWER
-        protected override void OnAttached(UnityGameFramework.Runtime.EntityLogic childEntity,
+        protected override void OnAttached(EntityLogic childEntity,
             Transform parentTransform, object userData)
 #else
         protected internal override void OnAttached(EntityLogic childEntity, Transform parentTransform, object userData)
@@ -55,7 +58,7 @@ namespace Game
         }
 
 #if UNITY_2017_3_OR_NEWER
-        protected override void OnDetached(UnityGameFramework.Runtime.EntityLogic childEntity, object userData)
+        protected override void OnDetached(EntityLogic childEntity, object userData)
 #else
         protected internal override void OnDetached(EntityLogic childEntity, object userData)
 #endif
@@ -64,7 +67,7 @@ namespace Game
         }
 
 #if UNITY_2017_3_OR_NEWER
-        protected override void OnAttachTo(UnityGameFramework.Runtime.EntityLogic parentEntity,
+        protected override void OnAttachTo(EntityLogic parentEntity,
             Transform parentTransform, object userData)
 #else
         protected internal override void OnAttachTo(EntityLogic parentEntity, Transform parentTransform, object userData)
@@ -74,7 +77,7 @@ namespace Game
         }
 
 #if UNITY_2017_3_OR_NEWER
-        protected override void OnDetachFrom(UnityGameFramework.Runtime.EntityLogic parentEntity, object userData)
+        protected override void OnDetachFrom(EntityLogic parentEntity, object userData)
 #else
         protected internal override void OnDetachFrom(EntityLogic parentEntity, object userData)
 #endif

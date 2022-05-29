@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Hotfix
+namespace Hotfix.Framework
 {
     public static partial class ReferencePool
     {

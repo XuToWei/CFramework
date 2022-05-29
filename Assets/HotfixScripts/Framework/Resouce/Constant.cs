@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace Hotfix
+namespace Hotfix.Framework
 {
     /// <summary>
     /// 资源相关常量。

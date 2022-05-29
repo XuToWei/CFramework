@@ -39,9 +39,14 @@ namespace Hotfix
             OnApplicationQuitEvent?.Invoke();
         }
 
-        public void OnShutdown()
+        public void OnShutDown()
         {
 
+        }
+
+        public void OnApplicationFocus()
+        {
+            
         }
     }
 }

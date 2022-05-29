@@ -9,7 +9,7 @@ using GameFramework.Resource;
 using System;
 using System.Collections.Generic;
 
-namespace Hotfix
+namespace Hotfix.Framework
 {
     /// <summary>
     /// 数据表管理器接口。

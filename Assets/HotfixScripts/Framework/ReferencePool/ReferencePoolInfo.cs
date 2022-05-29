@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Hotfix
+namespace Hotfix.Framework
 {
     /// <summary>
     /// 引用池信息。

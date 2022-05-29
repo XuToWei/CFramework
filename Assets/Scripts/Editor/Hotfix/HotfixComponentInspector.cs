@@ -6,7 +6,7 @@ namespace Game.Editor.Hotfix
     [CustomEditor(typeof(HotfixComponent))]
     public class HotfixComponentInspector : GameFrameworkInspector
     {
-        private HelperInfo<HotfixHelperBase> m_HotfixHelperInfo = new HelperInfo<HotfixHelperBase>("Hotfix");
+        private HelperInfo<BaseHotfixHelper> m_HotfixHelperInfo = new HelperInfo<BaseHotfixHelper>("Hotfix");
         
         public override void OnInspectorGUI()
         {

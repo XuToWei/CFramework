@@ -8,7 +8,7 @@
 using GameFramework.Resource;
 using System;
 
-namespace Hotfix
+namespace Hotfix.Framework
 {
     /// <summary>
     /// 数据表基类。
