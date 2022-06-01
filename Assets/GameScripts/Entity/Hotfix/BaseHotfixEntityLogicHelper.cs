@@ -6,7 +6,7 @@ namespace Game
 {
     internal abstract class BaseHotfixEntityLogicHelper : IReference
     {
-        protected internal abstract void OnInit(string hotfixType, object userData);
+        protected internal abstract void OnInit(string hotfixEntityLogicType, object userData);
         protected internal abstract void OnRecycle();
         protected internal abstract void OnShow(object userData);
         protected internal abstract void OnHide(bool isShutdown, object userData);

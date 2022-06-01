@@ -5,7 +5,7 @@ using UnityGameFramework.Runtime;
 
 namespace Game
 {
-    public class HotfixEntityLogic : BaseEntityLogic
+    public class HotfixEntity : Entity
     {
         private BaseHotfixEntityLogicHelper m_EntityLogicHelper;
         protected override void OnInit(object userData)
@@ -22,7 +22,7 @@ namespace Game
                 m_EntityLogicHelper = ReferencePool.Acquire<ILRuntimeEntityLogicHelper>();
             }
 #endif
-            m_EntityLogicHelper.OnInit(entityData.HotfixType, entityData.UserData);
+            m_EntityLogicHelper.OnInit(entityData.HotfixEntityType, entityData.UserData);
         }
 
         private void OnDestroy()

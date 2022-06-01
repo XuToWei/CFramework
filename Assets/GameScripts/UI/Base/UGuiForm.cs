@@ -6,15 +6,16 @@ using UnityGameFramework.Runtime;
 
 namespace Game
 {
-     public abstract class UGuiForm : UIFormLogic
+     public abstract class BaseUGuiFormLogic : UIFormLogic
     {
-        public const int DepthFactor = 100;
+        private const int DepthFactor = 100;
         private const float FadeTime = 0.3f;
-
-        private static Font s_MainFont = null;
+        
         private Canvas m_CachedCanvas = null;
         private CanvasGroup m_CanvasGroup = null;
         private readonly List<Canvas> m_CachedCanvasContainer = new List<Canvas>();
+
+        private readonly List<ParticleSystemRenderer> m_CachedParticleSystemRenderersContainer = new List<ParticleSystemRenderer>();
 
         public int OriginalDepth
         {
@@ -48,21 +49,6 @@ namespace Game
         public void PlayUISound(int uiSoundId)
         {
             GameEntry.Sound.PlayUISound(uiSoundId);
-        }
-
-        public static void SetMainFont(Font mainFont)
-        {
-            if (mainFont == null)
-            {
-                Log.Error("Main font is invalid.");
-                return;
-            }
-
-            s_MainFont = mainFont;
-
-            GameObject go = new GameObject();
-            go.AddComponent<Text>().font = mainFont;
-            Destroy(go);
         }
 
 #if UNITY_2017_3_OR_NEWER
@@ -198,14 +184,20 @@ namespace Game
             {
                 t.sortingOrder += deltaDepth;
             }
-
             m_CachedCanvasContainer.Clear();
+
+            GetComponentsInChildren(true, m_CachedParticleSystemRenderersContainer);
+            foreach (var t in m_CachedParticleSystemRenderersContainer)
+            {
+                t.sortingOrder += deltaDepth;
+            }
+            m_CachedParticleSystemRenderersContainer.Clear();
         }
 
         private IEnumerator CloseCo(float duration)
         {
             yield return m_CanvasGroup.FadeToAlpha(0f, duration);
-            GameEntry.UI.CloseUIForm(this);
+            GameEntry.UI.CloseUIForm(this.UIForm);
         }
     }
 }

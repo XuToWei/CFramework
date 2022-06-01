@@ -18,44 +18,44 @@ namespace Hotfix.Framework
     {
         private bool m_Available = false;
         private bool m_Visible = false;
-        private Entity m_Entity = null;
+        private UnityGameFramework.Runtime.Entity m_Entity = null;
         private Transform m_CachedTransform = null;
         private int m_OriginalLayer = 0;
         private Transform m_OriginalTransform = null;
-        private HotfixEntityLogic m_GameEntityLogic;
+        private HotfixEntity m_GameEntity;
 
         /// <summary>
         /// 获取实体。
         /// </summary>
-        public Entity Entity => m_GameEntityLogic.Entity;
+        public UnityGameFramework.Runtime.Entity Entity => m_GameEntity.Entity;
 
         /// <summary>
         /// 获取或设置实体名称。
         /// </summary>
         public string Name
         {
-            get => m_GameEntityLogic.Name;
-            set => m_GameEntityLogic.Name = value;
+            get => m_GameEntity.Name;
+            set => m_GameEntity.Name = value;
         }
 
         /// <summary>
         /// 获取实体是否可用。
         /// </summary>
-        public bool Available => m_GameEntityLogic.Available;
+        public bool Available => m_GameEntity.Available;
 
         /// <summary>
         /// 获取或设置实体是否可见。
         /// </summary>
         public bool Visible
         {
-            get => m_GameEntityLogic.Visible;
-            set => m_GameEntityLogic.Visible = value;
+            get => m_GameEntity.Visible;
+            set => m_GameEntity.Visible = value;
         }
 
         /// <summary>
         /// 获取已缓存的 Transform。
         /// </summary>
-        public Transform CachedTransform => m_GameEntityLogic.CachedTransform;
+        public Transform CachedTransform => m_GameEntity.CachedTransform;
 
         /// <summary>
         /// 实体初始化。

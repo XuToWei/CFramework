@@ -19,9 +19,9 @@ namespace Game
         private Action<float, float> m_OnUpdateAction;
         private Action<bool> m_InternalSetVisibleAction;
 
-        protected internal override void OnInit(string hotfixType, object userData)
+        protected internal override void OnInit(string hotfixEntityLogicType, object userData)
         {
-            m_HotfixType = GameEntry.Hotfix.Mono.GetHotfixType(hotfixType);
+            m_HotfixType = GameEntry.Hotfix.Mono.GetHotfixType(hotfixEntityLogicType);
             m_HotfixInstance = GameEntry.Hotfix.Mono.CreateInstance(m_HotfixType);
             m_OnInitAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<object>>(m_HotfixType, m_HotfixInstance, "OnInit");
             m_OnShowAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<object>>(m_HotfixType, m_HotfixInstance, "OnShow");

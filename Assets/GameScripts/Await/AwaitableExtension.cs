@@ -12,11 +12,11 @@ namespace Game
 {
     public static partial class AwaitableExtension
     {
-        private static readonly Dictionary<int, TaskCompletionSource<UIForm>> s_UIFormTcs =
+        private static readonly Dictionary<int, TaskCompletionSource<UnityGameFramework.Runtime.UIForm>> s_UIFormTcs =
             new Dictionary<int, TaskCompletionSource<UIForm>>();
 
-        private static readonly Dictionary<int, TaskCompletionSource<Entity>> s_EntityTcs =
-            new Dictionary<int, TaskCompletionSource<Entity>>();
+        private static readonly Dictionary<int, TaskCompletionSource<UnityGameFramework.Runtime.Entity>> s_EntityTcs =
+            new Dictionary<int, TaskCompletionSource<UnityGameFramework.Runtime.Entity>>();
 
         private static readonly Dictionary<string, TaskCompletionSource<bool>> s_DataTableTcs =
             new Dictionary<string, TaskCompletionSource<bool>>();
@@ -162,13 +162,13 @@ namespace Game
         /// <summary>
         /// 显示实体（可等待）
         /// </summary>
-        public static Task<Entity> ShowEntityAsync(this EntityComponent entityComponent, int entityId,
+        public static Task<UnityGameFramework.Runtime.Entity> ShowEntityAsync(this EntityComponent entityComponent, int entityId,
             Type entityLogicType, string entityAssetName, string entityGroupName, int priority,object userData)
         {
 #if UNITY_EDITOR
             TipsSubscribeEvent();
 #endif
-            var tcs = new TaskCompletionSource<Entity>();
+            var tcs = new TaskCompletionSource<UnityGameFramework.Runtime.Entity>();
             s_EntityTcs.Add(entityId, tcs);
             entityComponent.ShowEntity(entityId, entityLogicType, entityAssetName, entityGroupName, priority, userData);
             return tcs.Task;
@@ -496,14 +496,14 @@ namespace Game
         /// <summary>
         /// 显示实体（可等待）
         /// </summary>
-        public static Task<Entity> ShowEntityAsync(this EntityComponent entityComponent, Type logicType,
+        public static Task<UnityGameFramework.Runtime.Entity> ShowEntityAsync(this EntityComponent entityComponent, Type logicType,
             int priority,
             EntityData data)
         {
 #if UNITY_EDITOR
             TipsSubscribeEvent();
 #endif
-            var tcs = new TaskCompletionSource<Entity>();
+            var tcs = new TaskCompletionSource<UnityGameFramework.Runtime.Entity>();
             s_EntityTcs.Add(data.Id, tcs);
             entityComponent.ShowEntity(logicType, priority, data);
             return tcs.Task;

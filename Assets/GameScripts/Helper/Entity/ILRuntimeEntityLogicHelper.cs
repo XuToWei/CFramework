@@ -1,5 +1,4 @@
 #if ILRuntime
-using GameFramework;
 using ILRuntime.CLR.Method;
 using ILRuntime.CLR.TypeSystem;
 using ILRuntime.Runtime.Enviorment;
@@ -24,9 +23,10 @@ namespace Game
         private IMethod m_OnUpdateMethod;
         private IMethod m_InternalSetVisibleMethod;
 
-        protected internal override void OnInit(string hotfixType, object userData)
+        protected internal override void OnInit(string hotfixEntityLogicType, object userData)
         {
-            m_HotfixType = GameEntry.Hotfix.ILRuntime.AppDomain.LoadedTypes[hotfixType] as ILType;
+            m_HotfixType = GameEntry.Hotfix.ILRuntime.AppDomain.LoadedTypes[hotfixEntityLogicType] as ILType;
+            m_HotfixInstance = m_HotfixType.Instantiate();
             m_OnInitMethod = m_HotfixType.GetMethod("OnInit");
             m_OnShowMethod = m_HotfixType.GetMethod("OnShow");
             m_OnHideMethod = m_HotfixType.GetMethod("OnHide");

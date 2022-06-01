@@ -21,7 +21,7 @@ namespace ILRuntime.Runtime.Generated
             BindingFlags flag = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
             MethodBase method;
             Type[] args;
-            Type type = typeof(Game.UGuiForm);
+            Type type = typeof(Game.BaseUGuiFormLogic);
             args = new Type[]{typeof(UnityEngine.Font)};
             method = type.GetMethod("SetMainFont", flag, null, args, null);
             app.RegisterCLRMethodRedirection(method, SetMainFont_0);
@@ -41,7 +41,7 @@ namespace ILRuntime.Runtime.Generated
             __intp.Free(ptr_of_this_method);
 
 
-            Game.UGuiForm.SetMainFont(@mainFont);
+            
 
             return __ret;
         }

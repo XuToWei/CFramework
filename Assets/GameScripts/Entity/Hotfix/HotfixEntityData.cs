@@ -4,7 +4,10 @@ namespace Game
 {
     internal class HotfixEntityData : IReference
     {
-        public string HotfixType
+        /// <summary>
+        /// 
+        /// </summary>
+        public string HotfixEntityType
         {
             private set;
             get;
@@ -18,12 +21,13 @@ namespace Game
         
         public void Clear()
         {
-            HotfixType = default;
+            HotfixEntityType = default;
+            UserData = default;
         }
 
-        public void Fill(string hotfixType, object userData)
+        public void Fill(string hotfixEntityType, object userData)
         {
-            HotfixType = hotfixType;
+            HotfixEntityType = hotfixEntityType;
             UserData = userData;
         }
     }
