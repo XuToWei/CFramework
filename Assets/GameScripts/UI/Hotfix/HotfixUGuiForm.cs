@@ -14,7 +14,7 @@ namespace Game
         /// </summary>
         [SerializeField] private string m_HotfixUIFormType;
 
-        private BaseHotfixUIFormHelper m_HotfixUIFormHelper;
+        private HotfixUIFormHelperBase m_HotfixUIFormHelper;
         protected override void OnInit(object userData)
         {
             base.OnInit(userData);

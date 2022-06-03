@@ -5,7 +5,7 @@ using ILRuntime.Runtime.Enviorment;
 
 namespace Game
 {
-    internal sealed class ILRuntimeUIFormHelper : BaseHotfixUIFormHelper
+    internal sealed class ILRuntimeUIFormHelper : HotfixUIFormHelperBase
     {
         private ILType m_HotfixType;
         private object m_HotfixInstance;

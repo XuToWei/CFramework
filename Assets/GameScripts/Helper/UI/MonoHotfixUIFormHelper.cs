@@ -2,7 +2,7 @@ using System;
 
 namespace Game
 {
-    internal sealed class MonoHotfixUIFormHelper : BaseHotfixUIFormHelper
+    internal sealed class MonoHotfixUIFormHelper : HotfixUIFormHelperBase
     {
         private static readonly string s_HotfixProxyType = "Hotfix.Framework.EntityLogicProxy";
         private string m_HotfixEntityType;

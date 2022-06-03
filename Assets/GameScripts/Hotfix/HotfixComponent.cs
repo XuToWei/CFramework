@@ -11,7 +11,7 @@ namespace Game
     public class HotfixComponent : GameFrameworkComponent
     {
         [SerializeField] private string m_HotfixHelperTypeName;
-        [SerializeField] private BaseHotfixHelper m_HotfixHelper;
+        [SerializeField] private HotfixHelperBase m_HotfixHelper;
 
         public HotfixType HotfixType
         {

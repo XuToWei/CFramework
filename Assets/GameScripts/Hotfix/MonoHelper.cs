@@ -9,7 +9,7 @@ using UnityGameFramework.Runtime;
 
 namespace Game
 {
-    public class HotfixMono : BaseHotfixHelper
+    public class HotfixMono : HotfixHelperBase
     {
         public override HotfixType HotfixType => HotfixType.Mono;
         
@@ -113,7 +113,7 @@ namespace Game
 
         public override void OnApplicationFocus(bool hasFocus)
         {
-            m_OnApplicationPauseMethodAction.Invoke(hasFocus);
+            m_OnApplicationFocusMethodAction.Invoke(hasFocus);
         }
 
         public override void OnApplicationQuit()

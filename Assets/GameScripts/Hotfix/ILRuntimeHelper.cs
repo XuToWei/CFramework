@@ -13,7 +13,7 @@ using AppDomain = ILRuntime.Runtime.Enviorment.AppDomain;
 
 namespace Game
 {
-    public class HotfixILRuntime : BaseHotfixHelper
+    public class HotfixILRuntime : HotfixHelperBase
     {
         private AppDomain m_AppDomain;
         public AppDomain AppDomain => m_AppDomain;
