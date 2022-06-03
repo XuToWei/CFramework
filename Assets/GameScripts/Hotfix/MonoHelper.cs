@@ -38,10 +38,16 @@ namespace Game
             return Activator.CreateInstance(type);
         }
 
-        public T CreateMethodAction<T>(Type hotfixType,object instance, string methodName) where T : Delegate
+        public T CreateMethodAction<T>(Type hotfixType, object instance, string methodName) where T : Delegate
         {
             MethodInfo methodInfo = hotfixType.GetMethod(methodName);
             return (T)Delegate.CreateDelegate(typeof(T), instance, methodInfo);
+        }
+
+        public object Invoke(Type hotfixType, string methodName, object instance, params object[] p)
+        {
+            MethodInfo methodInfo = hotfixType.GetMethod(methodName);
+            return methodInfo.Invoke(instance, p);
         }
 
         public override async Task Load()

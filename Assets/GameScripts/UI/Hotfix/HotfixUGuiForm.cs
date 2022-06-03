@@ -12,95 +12,95 @@ namespace Game
         /// <summary>
         /// 对应的热更新层UGUI界面类名
         /// </summary>
-        [SerializeField] private string m_HotfixUIFormLogicType;
+        [SerializeField] private string m_HotfixUIFormType;
 
-        private BaseHotfixUIFormLogicHelper m_UIFormLogicHelper;
+        private BaseHotfixUIFormHelper m_HotfixUIFormHelper;
         protected override void OnInit(object userData)
         {
             base.OnInit(userData);
             if (GameEntry.Hotfix.HotfixType == HotfixType.Mono)
             {
-                m_UIFormLogicHelper = ReferencePool.Acquire<MonoHotfixUIFormLogicHelper>();
+                m_HotfixUIFormHelper = ReferencePool.Acquire<MonoHotfixUIFormHelper>();
             }
 #if ILRuntime
             else if (GameEntry.Hotfix.HotfixType == HotfixType.ILRuntime)
             {
-                m_UIFormLogicHelper = ReferencePool.Acquire<ILRuntimeUIFormLogicHelper>();
+                m_HotfixUIFormHelper = ReferencePool.Acquire<ILRuntimeUIFormHelper>();
             }
 #endif
-            m_UIFormLogicHelper.OnInit(m_HotfixUIFormLogicType, userData);
+            m_HotfixUIFormHelper.OnInit(m_HotfixUIFormType, userData);
         }
         
         private void OnDestroy()
         {
-            ReferencePool.Release(m_UIFormLogicHelper);
-            m_UIFormLogicHelper = null;
+            ReferencePool.Release(m_HotfixUIFormHelper);
+            m_HotfixUIFormHelper = null;
         }
 
         protected override void OnRecycle()
         {
             base.OnRecycle();
-            m_UIFormLogicHelper.OnRecycle();
+            m_HotfixUIFormHelper.OnRecycle();
         }
 
         protected override void OnOpen(object userData)
         {
             base.OnOpen(userData);
-            m_UIFormLogicHelper.OnOpen(userData);
+            m_HotfixUIFormHelper.OnOpen(userData);
         }
 
         protected override void OnClose(bool isShutdown, object userData)
         {
             base.OnClose(isShutdown, userData);
-            m_UIFormLogicHelper.OnClose(isShutdown, userData);
+            m_HotfixUIFormHelper.OnClose(isShutdown, userData);
         }
 
         protected override void OnPause()
         {
             base.OnPause();
-            m_UIFormLogicHelper.OnPause();
+            m_HotfixUIFormHelper.OnPause();
         }
 
         protected override void OnResume()
         {
             base.OnResume();
-            m_UIFormLogicHelper.OnResume();
+            m_HotfixUIFormHelper.OnResume();
         }
 
         protected override void OnCover()
         {
             base.OnCover();
-            m_UIFormLogicHelper.OnCover();
+            m_HotfixUIFormHelper.OnCover();
         }
 
         protected override void OnReveal()
         {
             base.OnReveal();
-            m_UIFormLogicHelper.OnReveal();
+            m_HotfixUIFormHelper.OnReveal();
         }
 
         protected override void OnRefocus(object userData)
         {
             base.OnRefocus(userData);
-            m_UIFormLogicHelper.OnRefocus(userData);
+            m_HotfixUIFormHelper.OnRefocus(userData);
         }
 
         protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
         {
             base.OnUpdate(elapseSeconds, realElapseSeconds);
-            m_UIFormLogicHelper.OnUpdate(elapseSeconds, realElapseSeconds);
+            m_HotfixUIFormHelper.OnUpdate(elapseSeconds, realElapseSeconds);
         }
 
         protected override void OnDepthChanged(int uiGroupDepth, int depthInUIGroup)
         {
             base.OnDepthChanged(uiGroupDepth, depthInUIGroup);
-            m_UIFormLogicHelper.OnDepthChanged(uiGroupDepth, depthInUIGroup);
+            m_HotfixUIFormHelper.OnDepthChanged(uiGroupDepth, depthInUIGroup);
         }
 
         protected override void InternalSetVisible(bool visible)
         {
             base.InternalSetVisible(visible);
-            m_UIFormLogicHelper.InternalSetVisible(visible);
+            m_HotfixUIFormHelper.InternalSetVisible(visible);
         }
     }
 }

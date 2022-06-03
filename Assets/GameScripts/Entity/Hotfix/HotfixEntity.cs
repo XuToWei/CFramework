@@ -14,12 +14,12 @@ namespace Game
             HotfixEntityData entityData = userData as HotfixEntityData;
             if (GameEntry.Hotfix.HotfixType == HotfixType.Mono)
             {
-                m_EntityLogicHelper = ReferencePool.Acquire<MonoEntityLogicHelper>();
+                m_EntityLogicHelper = ReferencePool.Acquire<MonoEntityHelper>();
             }
 #if ILRuntime
             else if (GameEntry.Hotfix.HotfixType == HotfixType.ILRuntime)
             {
-                m_EntityLogicHelper = ReferencePool.Acquire<ILRuntimeEntityLogicHelper>();
+                m_EntityLogicHelper = ReferencePool.Acquire<ILRuntimeEntityHelper>();
             }
 #endif
             m_EntityLogicHelper.OnInit(entityData.HotfixEntityType, entityData.UserData);

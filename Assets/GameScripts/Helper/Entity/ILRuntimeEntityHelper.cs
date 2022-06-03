@@ -7,10 +7,11 @@ using UnityGameFramework.Runtime;
 
 namespace Game
 {
-    internal sealed class ILRuntimeEntityLogicHelper : HotfixEntityHelperBase
+    internal sealed class ILRuntimeEntityHelper : HotfixEntityHelperBase
     {
-        private ILType m_HotfixType;
-        private object m_HotfixInstance;
+        private static readonly string s_HotfixProxyType = "Hotfix.Framework.EntityLogicProxy";
+        private string m_HotfixEntityType;
+        private object m_HotfixProxyInstance;
         
         private IMethod m_OnInitMethod;
         private IMethod m_OnShowMethod;
@@ -23,23 +24,24 @@ namespace Game
         private IMethod m_OnUpdateMethod;
         private IMethod m_InternalSetVisibleMethod;
 
-        protected internal override void OnInit(string hotfixEntityLogicType, object userData)
+        protected internal override void OnInit(string hotfixEntityType, object userData)
         {
-            m_HotfixType = GameEntry.Hotfix.ILRuntime.AppDomain.LoadedTypes[hotfixEntityLogicType] as ILType;
-            m_HotfixInstance = m_HotfixType.Instantiate();
-            m_OnInitMethod = m_HotfixType.GetMethod("OnInit");
-            m_OnShowMethod = m_HotfixType.GetMethod("OnShow");
-            m_OnHideMethod = m_HotfixType.GetMethod("OnHide");
-            m_OnRecycleMethod = m_HotfixType.GetMethod("OnRecycle");
-            m_OnAttachedMethod = m_HotfixType.GetMethod("OnAttached");
-            m_OnDetachedMethod = m_HotfixType.GetMethod("OnDetached");
-            m_OnAttachToMethod = m_HotfixType.GetMethod("OnAttachTo");
-            m_OnDetachFromMethod = m_HotfixType.GetMethod("OnDetachFrom");
-            m_OnUpdateMethod = m_HotfixType.GetMethod("OnUpdate");
-            m_InternalSetVisibleMethod = m_HotfixType.GetMethod("InternalSetVisible");
+            ILType hotfixProxyType = GameEntry.Hotfix.ILRuntime.AppDomain.LoadedTypes[s_HotfixProxyType] as ILType;
+            //调用无参数静态方法，appdomain.Invoke("类名", "方法名", 对象引用, 参数列表);
+            m_HotfixProxyInstance = GameEntry.Hotfix.ILRuntime.AppDomain.Invoke(s_HotfixProxyType, "Acquire", null, null);
+            m_OnInitMethod = hotfixProxyType.GetMethod("OnInit");
+            m_OnShowMethod = hotfixProxyType.GetMethod("OnShow");
+            m_OnHideMethod = hotfixProxyType.GetMethod("OnHide");
+            m_OnRecycleMethod = hotfixProxyType.GetMethod("OnRecycle");
+            m_OnAttachedMethod = hotfixProxyType.GetMethod("OnAttached");
+            m_OnDetachedMethod = hotfixProxyType.GetMethod("OnDetached");
+            m_OnAttachToMethod = hotfixProxyType.GetMethod("OnAttachTo");
+            m_OnDetachFromMethod = hotfixProxyType.GetMethod("OnDetachFrom");
+            m_OnUpdateMethod = hotfixProxyType.GetMethod("OnUpdate");
+            m_InternalSetVisibleMethod = hotfixProxyType.GetMethod("InternalSetVisible");
 
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnInitMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.PushObject(userData);
             ctx.Invoke();
         }
@@ -47,7 +49,7 @@ namespace Game
         protected internal override void OnShow(object userData)
         {
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnShowMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.PushObject(userData);
             ctx.Invoke();
         }
@@ -55,7 +57,7 @@ namespace Game
         protected internal override void OnHide(bool isShutdown, object userData)
         {
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnHideMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.PushBool(isShutdown);
             ctx.PushObject(userData);
             ctx.Invoke();
@@ -64,14 +66,14 @@ namespace Game
         protected internal override void OnRecycle()
         {
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnRecycleMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.Invoke();
         }
         
         protected internal override void OnAttached(EntityLogic childEntity, Transform parentTransform, object userData)
         {
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnAttachedMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.PushObject(childEntity);
             ctx.PushObject(parentTransform);
             ctx.PushObject(userData);
@@ -81,7 +83,7 @@ namespace Game
         protected internal override void OnDetached(EntityLogic childEntity, object userData)
         {
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnDetachedMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.PushObject(childEntity);
             ctx.PushObject(userData);
             ctx.Invoke();
@@ -90,7 +92,7 @@ namespace Game
         protected internal override void OnAttachTo(EntityLogic parentEntity, Transform parentTransform, object userData)
         {
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnAttachToMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.PushObject(parentEntity);
             ctx.PushObject(parentTransform);
             ctx.PushObject(userData);
@@ -100,7 +102,7 @@ namespace Game
         protected internal override void OnDetachFrom(EntityLogic parentEntity, object userData)
         {
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnDetachFromMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.PushObject(parentEntity);
             ctx.PushObject(userData);
             ctx.Invoke();
@@ -109,7 +111,7 @@ namespace Game
         protected internal override void OnUpdate(float elapseSeconds, float realElapseSeconds)
         {
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnUpdateMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.PushObject(elapseSeconds);
             ctx.PushObject(realElapseSeconds);
             ctx.Invoke();
@@ -118,14 +120,13 @@ namespace Game
         protected internal override void InternalSetVisible(bool visible)
         {
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_InternalSetVisibleMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.PushBool(visible);
             ctx.Invoke();
         }
 
         public override void Clear()
         {
-            m_HotfixType = default;
             m_OnInitMethod = default;
             m_OnShowMethod = default;
             m_OnHideMethod = default;
@@ -136,6 +137,8 @@ namespace Game
             m_OnDetachFromMethod = default;
             m_OnUpdateMethod = default;
             m_InternalSetVisibleMethod = default;
+            GameEntry.Hotfix.ILRuntime.AppDomain.Invoke(s_HotfixProxyType, "Release", null, m_HotfixProxyInstance);
+            m_HotfixProxyInstance = default;
         }
     }
 }

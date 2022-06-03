@@ -2,10 +2,13 @@ using System;
 
 namespace Game
 {
-    internal sealed class MonoHotfixUIFormLogicHelper : BaseHotfixUIFormLogicHelper
+    internal sealed class MonoHotfixUIFormHelper : BaseHotfixUIFormHelper
     {
-        private Type m_HotfixType;
-        private object m_HotfixInstance;
+        private static readonly string s_HotfixProxyType = "Hotfix.Framework.EntityLogicProxy";
+        private string m_HotfixEntityType;
+        private Type m_HotfixProxyType;
+        private object m_HotfixProxyInstance;
+        
         private Action<object> m_OnInitAction;
         private Action<object> m_OnOpenAction;
         private Action m_OnRecycleAction;
@@ -19,22 +22,23 @@ namespace Game
         private Action<int, int> m_OnDepthChangedAction;
         private Action<bool> m_InternalSetVisibleAction;
         
-        protected internal override void OnInit(string hotfixUIFormLogicType, object userData)
-        {
-            m_HotfixType = GameEntry.Hotfix.Mono.GetHotfixType(hotfixUIFormLogicType);
-            m_HotfixInstance = GameEntry.Hotfix.Mono.CreateInstance(m_HotfixType);
-            m_OnInitAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<object>>(m_HotfixType, m_HotfixInstance, "OnInit");
-            m_OnOpenAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<object>>(m_HotfixType, m_HotfixInstance, "OnOpen");
-            m_OnRecycleAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action>(m_HotfixType, m_HotfixInstance, "OnRecycle");
-            m_OnCloseAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<bool, object>>(m_HotfixType, m_HotfixInstance, "OnClose");
-            m_OnPauseAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action>(m_HotfixType, m_HotfixInstance, "OnPause");
-            m_OnResumeAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action>(m_HotfixType, m_HotfixInstance, "OnResume");
-            m_OnCoverAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action>(m_HotfixType, m_HotfixInstance, "OnCover");
-            m_OnRevealAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action>(m_HotfixType, m_HotfixInstance, "OnReveal");
-            m_OnRefocusAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<object>>(m_HotfixType, m_HotfixInstance, "OnRefocus");
-            m_OnUpdateAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<float, float>>(m_HotfixType, m_HotfixInstance, "OnUpdate");
-            m_OnDepthChangedAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<int, int>>(m_HotfixType, m_HotfixInstance, "OnDepthChanged");
-            m_InternalSetVisibleAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<bool>>(m_HotfixType, m_HotfixInstance, "InternalSetVisible");
+        protected internal override void OnInit(string hotfixUIFormType, object userData)
+        { 
+            m_HotfixProxyType = GameEntry.Hotfix.Mono.GetHotfixType(hotfixUIFormType);
+            m_HotfixProxyInstance = GameEntry.Hotfix.Mono.Invoke(m_HotfixProxyType, "Acquire", null, null);
+            
+            m_OnInitAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<object>>(m_HotfixProxyType, m_HotfixProxyInstance, "OnInit");
+            m_OnOpenAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<object>>(m_HotfixProxyType, m_HotfixProxyInstance, "OnOpen");
+            m_OnRecycleAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action>(m_HotfixProxyType, m_HotfixProxyInstance, "OnRecycle");
+            m_OnCloseAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<bool, object>>(m_HotfixProxyType, m_HotfixProxyInstance, "OnClose");
+            m_OnPauseAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action>(m_HotfixProxyType, m_HotfixProxyInstance, "OnPause");
+            m_OnResumeAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action>(m_HotfixProxyType, m_HotfixProxyInstance, "OnResume");
+            m_OnCoverAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action>(m_HotfixProxyType, m_HotfixProxyInstance, "OnCover");
+            m_OnRevealAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action>(m_HotfixProxyType, m_HotfixProxyInstance, "OnReveal");
+            m_OnRefocusAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<object>>(m_HotfixProxyType, m_HotfixProxyInstance, "OnRefocus");
+            m_OnUpdateAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<float, float>>(m_HotfixProxyType, m_HotfixProxyInstance, "OnUpdate");
+            m_OnDepthChangedAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<int, int>>(m_HotfixProxyType, m_HotfixProxyInstance, "OnDepthChanged");
+            m_InternalSetVisibleAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<bool>>(m_HotfixProxyType, m_HotfixProxyInstance, "InternalSetVisible");
             
             m_OnInitAction.Invoke(userData);
         }
@@ -71,7 +75,7 @@ namespace Game
 
         protected internal override void OnReveal()
         {
-            m_OnRecycleAction.Invoke();
+            m_OnRevealAction.Invoke();
         }
 
         protected internal override void OnRefocus(object userData)
@@ -96,8 +100,6 @@ namespace Game
 
         public override void Clear()
         {
-            m_HotfixType = default;
-            m_HotfixInstance = default;
             m_OnInitAction = default;
             m_OnOpenAction = default;
             m_OnRecycleAction = default;
@@ -110,6 +112,10 @@ namespace Game
             m_OnUpdateAction = default;
             m_OnDepthChangedAction = default;
             m_InternalSetVisibleAction = default;
+
+            GameEntry.Hotfix.Mono.Invoke(m_HotfixProxyType, "Release", null, m_HotfixProxyInstance);
+            m_HotfixProxyType = default;
+            m_HotfixProxyInstance = default;
         }
     }
 }

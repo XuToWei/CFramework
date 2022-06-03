@@ -1,12 +1,4 @@
-//------------------------------------------------------------
-// Game Framework
-// Copyright © 2013-2021 Jiang Yin. All rights reserved.
-// Homepage: https://gameframework.cn/
-// Feedback: mailto:ellan@gameframework.cn
-//------------------------------------------------------------
-
 using UnityEngine;
-using UnityGameFramework.Runtime;
 using Game;
 
 namespace Hotfix.Framework
@@ -14,14 +6,8 @@ namespace Hotfix.Framework
     /// <summary>
     /// 实体逻辑基类。
     /// </summary>
-    public abstract class EntityLogic
+    public abstract class EntityLogic : IReference
     {
-        private bool m_Available = false;
-        private bool m_Visible = false;
-        private UnityGameFramework.Runtime.Entity m_Entity = null;
-        private Transform m_CachedTransform = null;
-        private int m_OriginalLayer = 0;
-        private Transform m_OriginalTransform = null;
         private HotfixEntity m_GameEntity;
 
         /// <summary>
@@ -57,6 +43,16 @@ namespace Hotfix.Framework
         /// </summary>
         public Transform CachedTransform => m_GameEntity.CachedTransform;
 
+        public void Clear()
+        {
+            m_GameEntity = default;
+        }
+
+        public void Fill(HotfixEntity hotfixEntity)
+        {
+            m_GameEntity = hotfixEntity;
+        }
+
         /// <summary>
         /// 实体初始化。
         /// </summary>
@@ -87,7 +83,8 @@ namespace Hotfix.Framework
         /// <param name="childEntity">附加的子实体。</param>
         /// <param name="parentTransform">被附加父实体的位置。</param>
         /// <param name="userData">用户自定义数据。</param>
-        protected internal abstract void OnAttached(EntityLogic childEntity, Transform parentTransform, object userData);
+        protected internal abstract void
+            OnAttached(EntityLogic childEntity, Transform parentTransform, object userData);
 
         /// <summary>
         /// 实体解除子实体。
@@ -102,7 +99,8 @@ namespace Hotfix.Framework
         /// <param name="parentEntity">被附加的父实体。</param>
         /// <param name="parentTransform">被附加父实体的位置。</param>
         /// <param name="userData">用户自定义数据。</param>
-        protected internal abstract void OnAttachTo(EntityLogic parentEntity, Transform parentTransform, object userData);
+        protected internal abstract void OnAttachTo(EntityLogic parentEntity, Transform parentTransform,
+            object userData);
 
         /// <summary>
         /// 实体解除子实体。
@@ -122,6 +120,6 @@ namespace Hotfix.Framework
         /// 设置实体的可见性。
         /// </summary>
         /// <param name="visible">实体的可见性。</param>
-        protected abstract void InternalSetVisible(bool visible);
+        protected internal abstract void InternalSetVisible(bool visible);
     }
 }

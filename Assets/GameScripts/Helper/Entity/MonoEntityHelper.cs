@@ -4,7 +4,7 @@ using UnityGameFramework.Runtime;
 
 namespace Game
 {
-    internal sealed class MonoEntityLogicHelper : HotfixEntityHelperBase
+    internal sealed class MonoEntityHelper : HotfixEntityHelperBase
     {
         private Type m_HotfixType;
         private object m_HotfixInstance;
@@ -19,9 +19,9 @@ namespace Game
         private Action<float, float> m_OnUpdateAction;
         private Action<bool> m_InternalSetVisibleAction;
 
-        protected internal override void OnInit(string hotfixEntityLogicType, object userData)
+        protected internal override void OnInit(string hotfixEntityType, object userData)
         {
-            m_HotfixType = GameEntry.Hotfix.Mono.GetHotfixType(hotfixEntityLogicType);
+            m_HotfixType = GameEntry.Hotfix.Mono.GetHotfixType(hotfixEntityType);
             m_HotfixInstance = GameEntry.Hotfix.Mono.CreateInstance(m_HotfixType);
             m_OnInitAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<object>>(m_HotfixType, m_HotfixInstance, "OnInit");
             m_OnShowAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<object>>(m_HotfixType, m_HotfixInstance, "OnShow");

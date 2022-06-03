@@ -2,9 +2,9 @@ using GameFramework;
 
 namespace Game
 {
-    internal abstract class BaseHotfixUIFormLogicHelper : IReference
+    internal abstract class BaseHotfixUIFormHelper : IReference
     {
-        protected internal abstract void OnInit(string hotfixUIFormLogicType, object userData);
+        protected internal abstract void OnInit(string hotfixUIFormType, object userData);
         protected internal abstract void OnRecycle();
         protected internal abstract void OnOpen(object userData);
         protected internal abstract void OnClose(bool isShutdown, object userData);
