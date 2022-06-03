@@ -7,7 +7,7 @@ namespace Game
 {
     public class HotfixEntity : Entity
     {
-        private BaseHotfixEntityLogicHelper m_EntityLogicHelper;
+        private HotfixEntityHelperBase m_EntityLogicHelper;
         protected override void OnInit(object userData)
         {
             base.OnInit(userData);

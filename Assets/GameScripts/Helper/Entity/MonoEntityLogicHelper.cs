@@ -4,7 +4,7 @@ using UnityGameFramework.Runtime;
 
 namespace Game
 {
-    internal sealed class MonoEntityLogicHelper : BaseHotfixEntityLogicHelper
+    internal sealed class MonoEntityLogicHelper : HotfixEntityHelperBase
     {
         private Type m_HotfixType;
         private object m_HotfixInstance;

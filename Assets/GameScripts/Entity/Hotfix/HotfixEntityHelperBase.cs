@@ -4,7 +4,7 @@ using UnityGameFramework.Runtime;
 
 namespace Game
 {
-    internal abstract class BaseHotfixEntityLogicHelper : IReference
+    internal abstract class HotfixEntityHelperBase : IReference
     {
         protected internal abstract void OnInit(string hotfixEntityLogicType, object userData);
         protected internal abstract void OnRecycle();

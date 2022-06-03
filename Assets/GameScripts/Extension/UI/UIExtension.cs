@@ -73,12 +73,12 @@ namespace Game
             return uiGroup.HasUIForm(assetName);
         }
 
-        public static BaseUGuiFormLogic GetUIForm(this UIComponent uiComponent, UIFormId uiFormId, string uiGroupName = null)
+        public static UGuiForm GetUIForm(this UIComponent uiComponent, UIFormId uiFormId, string uiGroupName = null)
         {
             return uiComponent.GetUIForm((int)uiFormId, uiGroupName);
         }
 
-        public static BaseUGuiFormLogic GetUIForm(this UIComponent uiComponent, int uiFormId, string uiGroupName = null)
+        public static UGuiForm GetUIForm(this UIComponent uiComponent, int uiFormId, string uiGroupName = null)
         {
             IDataTable<DRUIForm> dtUIForm = GameEntry.DataTable.GetDataTable<DRUIForm>();
             DRUIForm drUIForm = dtUIForm.GetDataRow(uiFormId);
@@ -97,7 +97,7 @@ namespace Game
                     return null;
                 }
 
-                return (BaseUGuiFormLogic)uiForm.Logic;
+                return (UGuiForm)uiForm.Logic;
             }
 
             IUIGroup uiGroup = uiComponent.GetUIGroup(uiGroupName);
@@ -112,10 +112,10 @@ namespace Game
                 return null;
             }
 
-            return (BaseUGuiFormLogic)uiForm.Logic;
+            return (UGuiForm)uiForm.Logic;
         }
 
-        public static void CloseUIForm(this UIComponent uiComponent, BaseUGuiFormLogic uiForm)
+        public static void CloseUIForm(this UIComponent uiComponent, UGuiForm uiForm)
         {
             IDataTable<DRUIForm> dtUIForm = GameEntry.DataTable.GetDataTable<DRUIForm>();
             DRUIForm drUIForm = dtUIForm.GetDataRow(data => AssetUtility.GetUIFormAsset(data.AssetName) == uiForm.UIForm.UIFormAssetName);

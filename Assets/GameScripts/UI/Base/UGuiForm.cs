@@ -6,22 +6,18 @@ using UnityGameFramework.Runtime;
 
 namespace Game
 {
-     public abstract class BaseUGuiFormLogic : UIFormLogic
+    public abstract class UGuiForm : UIFormLogic
     {
         private const int DepthFactor = 100;
         private const float FadeTime = 0.3f;
-        
+
         private Canvas m_CachedCanvas = null;
         private CanvasGroup m_CanvasGroup = null;
         private readonly List<Canvas> m_CachedCanvasContainer = new List<Canvas>();
 
         private readonly List<ParticleSystemRenderer> m_CachedParticleSystemRenderersContainer = new List<ParticleSystemRenderer>();
 
-        public int OriginalDepth
-        {
-            get;
-            private set;
-        }
+        public int OriginalDepth { get; private set; }
 
         public int Depth => m_CachedCanvas.sortingOrder;
 
@@ -38,7 +34,7 @@ namespace Game
 
             if (ignoreFade)
             {
-                GameEntry.UI.CloseUIForm(this);
+                GameEntry.UI.CloseUIForm(this.UIForm);
             }
             else
             {
@@ -78,7 +74,6 @@ namespace Game
             // {
             //     texts[i].text = GameEntry.Localization.GetString(texts[i].text);
             // }
-            
         }
 
 #if UNITY_2017_3_OR_NEWER
@@ -178,12 +173,14 @@ namespace Game
         {
             int oldDepth = Depth;
             base.OnDepthChanged(uiGroupDepth, depthInUIGroup);
-            int deltaDepth = UGuiGroupHelper.DepthFactor * uiGroupDepth + DepthFactor * depthInUIGroup - oldDepth + OriginalDepth;
+            int deltaDepth = UGuiGroupHelper.DepthFactor * uiGroupDepth + DepthFactor * depthInUIGroup - oldDepth +
+                             OriginalDepth;
             GetComponentsInChildren(true, m_CachedCanvasContainer);
             foreach (var t in m_CachedCanvasContainer)
             {
                 t.sortingOrder += deltaDepth;
             }
+
             m_CachedCanvasContainer.Clear();
 
             GetComponentsInChildren(true, m_CachedParticleSystemRenderersContainer);
@@ -191,6 +188,7 @@ namespace Game
             {
                 t.sortingOrder += deltaDepth;
             }
+
             m_CachedParticleSystemRenderersContainer.Clear();
         }
 
