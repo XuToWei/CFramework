@@ -6,7 +6,7 @@ namespace Hotfix
     /// <summary>
     ///     热更新层游戏入口
     /// </summary>
-    public partial class HotfixEntry
+    public class HotfixEntry
     {
         private bool IsShutDown { get; set; }
 

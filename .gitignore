@@ -1,6 +1,7 @@
-﻿Library
+Library
 Logs
 obj
 Temp
 .idea
 *.csproj
+*.DS_Store
