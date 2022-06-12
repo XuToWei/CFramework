@@ -1,7 +1,9 @@
 {
     "name": "Hotfix.Model",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:2144f06db9c2249d18ff9fecc1189720"
+    ],
     "includePlatforms": [
         "Editor"
     ],

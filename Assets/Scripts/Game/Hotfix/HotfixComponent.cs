@@ -20,14 +20,14 @@ namespace Game
         }
         
 #if ILRuntime
-        public HotfixILRuntime ILRuntime
+        public ILRuntimeHotfixHelper ILRuntime
         {
             private set;
             get;
         }
 #endif
 
-        public HotfixMono Mono
+        public MonoHotfixHelper Mono
         {
             private set;
             get;
@@ -59,11 +59,11 @@ namespace Game
                 case HotfixType.Undefined:
                     throw new GameFrameworkException("HotfixType Undefined!");
                 case HotfixType.Mono:
-                    Mono = m_HotfixHelper as HotfixMono;
+                    Mono = m_HotfixHelper as MonoHotfixHelper;
                     break;
 #if ILRuntime
                 case HotfixType.ILRuntime:
-                    ILRuntime = m_HotfixHelper as HotfixILRuntime;
+                    ILRuntime = m_HotfixHelper as ILRuntimeHotfixHelper;
                     break;
 #endif
             }
@@ -113,7 +113,7 @@ namespace Game
 
         public void Reload()
         {
-            if (m_HotfixHelper is not HotfixMono mono)
+            if (m_HotfixHelper is not MonoHotfixHelper mono)
             {
                 throw new GameFrameworkException(Utility.Text.Format("[0] can't reload, can use Game.MonoHelper to reload!", m_HotfixHelperTypeName));
             }

@@ -17,7 +17,7 @@ namespace Game.Editor
                 using System.IO.FileStream fs = new System.IO.FileStream(AssetUtility.GetHotfixDllAsset(dllName), System.IO.FileMode.Open, System.IO.FileAccess.Read);
                 domain.LoadAssembly(fs);
                 ILRuntimeUtility.RegisterCrossBindingAdaptor(domain);
-                ILRuntime.Runtime.CLRBinding.BindingCodeGenerator.GenerateBindingCode(domain, "Assets/Scripts/Generated/ILRuntime/");
+                ILRuntime.Runtime.CLRBinding.BindingCodeGenerator.GenerateBindingCode(domain, "Assets/Scripts/Game/Generate/ILRuntime/");
             }
             
             AssetDatabase.Refresh();

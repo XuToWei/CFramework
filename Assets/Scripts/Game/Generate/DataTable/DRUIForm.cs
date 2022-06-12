@@ -1,6 +1,6 @@
 ﻿//------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
-// 生成时间：2022-04-02 11:05:50.099
+// 生成时间：2022-06-12 20:46:31.377
 //------------------------------------------------------------
 
 using GameFramework;
@@ -10,7 +10,6 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-
 
 namespace Game
 {
@@ -80,11 +79,12 @@ namespace Game
             index++;
             m_Id = int.Parse(columnStrings[index++]);
             index++;
-			AssetName = columnStrings[index++];
-			UIGroupName = columnStrings[index++];
-			AllowMultiInstance = bool.Parse(columnStrings[index++]);
-			PauseCoveredUIForm = bool.Parse(columnStrings[index++]);
+            AssetName = columnStrings[index++];
+            UIGroupName = columnStrings[index++];
+            AllowMultiInstance = bool.Parse(columnStrings[index++]);
+            PauseCoveredUIForm = bool.Parse(columnStrings[index++]);
             index++;
+
             GeneratePropertyArray();
             return true;
         }
