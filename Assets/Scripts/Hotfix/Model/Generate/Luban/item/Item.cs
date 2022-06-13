@@ -7,6 +7,7 @@
 //------------------------------------------------------------------------------
 using Bright.Serialization;
 using System.Collections.Generic;
+using SimpleJSON;
 
 
 
@@ -15,25 +16,41 @@ namespace cfg.item
 
 public sealed partial class Item :  Bright.Config.BeanBase 
 {
-    public Item(ByteBuf _buf) 
+    public Item(JSONNode _json) 
     {
-        Id = _buf.ReadInt();
-        Name = _buf.ReadString();
-        Desc = _buf.ReadString();
-        Price = _buf.ReadInt();
-        UpgradeToItemId = _buf.ReadInt();
-        if(_buf.ReadBool()){ ExpireTime = _buf.ReadInt(); } else { ExpireTime = null; }
-        BatchUseable = _buf.ReadBool();
-        Quality = (item.EQuality)_buf.ReadInt();
-        ExchangeStream = item.ItemExchange.DeserializeItemExchange(_buf);
-        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);ExchangeList = new System.Collections.Generic.List<item.ItemExchange>(n);for(var i = 0 ; i < n ; i++) { item.ItemExchange _e;  _e = item.ItemExchange.DeserializeItemExchange(_buf); ExchangeList.Add(_e);}}
-        ExchangeColumn = item.ItemExchange.DeserializeItemExchange(_buf);
+        { if(!_json["id"].IsNumber) { throw new SerializationException(); }  Id = _json["id"]; }
+        { if(!_json["name"].IsString) { throw new SerializationException(); }  Name = _json["name"]; }
+        { if(!_json["desc"].IsString) { throw new SerializationException(); }  Desc = _json["desc"]; }
+        { if(!_json["price"].IsNumber) { throw new SerializationException(); }  Price = _json["price"]; }
+        { if(!_json["upgrade_to_item_id"].IsNumber) { throw new SerializationException(); }  UpgradeToItemId = _json["upgrade_to_item_id"]; }
+        { var _j = _json["expire_time"]; if (_j.Tag != JSONNodeType.None && _j.Tag != JSONNodeType.NullValue) { { if(!_j.IsNumber) { throw new SerializationException(); }  ExpireTime = _j; } } else { ExpireTime = null; } }
+        { if(!_json["batch_useable"].IsBoolean) { throw new SerializationException(); }  BatchUseable = _json["batch_useable"]; }
+        { if(!_json["quality"].IsNumber) { throw new SerializationException(); }  Quality = (item.EQuality)_json["quality"].AsInt; }
+        { if(!_json["exchange_stream"].IsObject) { throw new SerializationException(); }  ExchangeStream = item.ItemExchange.DeserializeItemExchange(_json["exchange_stream"]); }
+        { var _json1 = _json["exchange_list"]; if(!_json1.IsArray) { throw new SerializationException(); } ExchangeList = new System.Collections.Generic.List<item.ItemExchange>(_json1.Count); foreach(JSONNode __e in _json1.Children) { item.ItemExchange __v;  { if(!__e.IsObject) { throw new SerializationException(); }  __v = item.ItemExchange.DeserializeItemExchange(__e); }  ExchangeList.Add(__v); }   }
+        { if(!_json["exchange_column"].IsObject) { throw new SerializationException(); }  ExchangeColumn = item.ItemExchange.DeserializeItemExchange(_json["exchange_column"]); }
         PostInit();
     }
 
-    public static Item DeserializeItem(ByteBuf _buf)
+    public Item(int id, string name, string desc, int price, int upgrade_to_item_id, int? expire_time, bool batch_useable, item.EQuality quality, item.ItemExchange exchange_stream, System.Collections.Generic.List<item.ItemExchange> exchange_list, item.ItemExchange exchange_column ) 
     {
-        return new item.Item(_buf);
+        this.Id = id;
+        this.Name = name;
+        this.Desc = desc;
+        this.Price = price;
+        this.UpgradeToItemId = upgrade_to_item_id;
+        this.ExpireTime = expire_time;
+        this.BatchUseable = batch_useable;
+        this.Quality = quality;
+        this.ExchangeStream = exchange_stream;
+        this.ExchangeList = exchange_list;
+        this.ExchangeColumn = exchange_column;
+        PostInit();
+    }
+
+    public static Item DeserializeItem(JSONNode _json)
+    {
+        return new item.Item(_json);
     }
 
     /// <summary>
@@ -118,5 +135,4 @@ public sealed partial class Item :  Bright.Config.BeanBase
     partial void PostInit();
     partial void PostResolve();
 }
-
 }

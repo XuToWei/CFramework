@@ -6,25 +6,26 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 using Bright.Serialization;
+using SimpleJSON;
 using System.Threading.Tasks;
 
 
 namespace cfg
 {
    
-public partial class Tables
+public sealed partial class Tables
 {
     public item.TbItem TbItem {get; private set; }
 
     public Tables() { }
 
-    public async Task LoadAsync(System.Func<string, Task<ByteBuf>> loader)
+    public async Task LoadAsync(System.Func<string, Task<JSONNode>> loader)
     {
         var tables = new System.Collections.Generic.Dictionary<string, object>();
         TbItem = new item.TbItem(await loader("item_tbitem")); 
         tables.Add("item.TbItem", TbItem);
-
         PostInit();
+
         TbItem.Resolve(tables); 
         PostResolve();
     }

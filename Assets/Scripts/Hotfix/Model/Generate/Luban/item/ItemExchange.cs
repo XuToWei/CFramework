@@ -7,6 +7,7 @@
 //------------------------------------------------------------------------------
 using Bright.Serialization;
 using System.Collections.Generic;
+using SimpleJSON;
 
 
 
@@ -15,16 +16,23 @@ namespace cfg.item
 
 public sealed partial class ItemExchange :  Bright.Config.BeanBase 
 {
-    public ItemExchange(ByteBuf _buf) 
+    public ItemExchange(JSONNode _json) 
     {
-        Id = _buf.ReadInt();
-        Num = _buf.ReadInt();
+        { if(!_json["id"].IsNumber) { throw new SerializationException(); }  Id = _json["id"]; }
+        { if(!_json["num"].IsNumber) { throw new SerializationException(); }  Num = _json["num"]; }
         PostInit();
     }
 
-    public static ItemExchange DeserializeItemExchange(ByteBuf _buf)
+    public ItemExchange(int id, int num ) 
     {
-        return new item.ItemExchange(_buf);
+        this.Id = id;
+        this.Num = num;
+        PostInit();
+    }
+
+    public static ItemExchange DeserializeItemExchange(JSONNode _json)
+    {
+        return new item.ItemExchange(_json);
     }
 
     /// <summary>
@@ -59,5 +67,4 @@ public sealed partial class ItemExchange :  Bright.Config.BeanBase
     partial void PostInit();
     partial void PostResolve();
 }
-
 }
