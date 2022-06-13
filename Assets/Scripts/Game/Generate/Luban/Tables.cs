@@ -9,7 +9,7 @@ using Bright.Serialization;
 using System.Threading.Tasks;
 
 
-namespace Hotfix.Model
+namespace Game
 {
    
 public partial class Tables

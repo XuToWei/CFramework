@@ -10,6 +10,7 @@ using GameEntry = Game.GameEntry;
 using GameFramework.Event;
 using GameFramework;
 using SimpleJSON;
+using Hotfix.Model;
 
 namespace Hotfix.Logic
 {
@@ -74,7 +75,8 @@ namespace Hotfix.Logic
                 LoadDataTable(dataTableName);
             }
 
-            PreloadLuban();
+            PreloadLuban(typeof(Model.Tables), "Hotfix");
+            PreloadLuban(typeof(Game.Tables), "Game");
 
             // Preload dictionaries
             // LoadDictionary("Default");
@@ -83,28 +85,32 @@ namespace Hotfix.Logic
             // LoadFont("MainFont");
         }
 
-        private async void PreloadLuban()
+        private async void PreloadLuban(Type tablesType, string lubanType)
         {
-            m_LoadedFlags.AddLast("cfg.Tables");
-            var tablesCtor = typeof(cfg.Tables).GetConstructors()[0];
+            m_LoadedFlags.AddLast(tablesType.FullName);
+            
+            var tablesCtor = tablesType.GetMethod("LoadAsync");
+            
             var loaderReturnType = tablesCtor.GetParameters()[0].ParameterType.GetGenericArguments()[1];
+            
+            Debug.Log($"{tablesType} : {tablesCtor} -- {loaderReturnType}");
             // 根据cfg.Tables的构造函数的Loader的返回值类型决定使用json还是ByteBuf Loader
+            async Task<JSONNode> LoadJson(string file)
+            {
+                TextAsset textAsset = await GameEntry.Resource.LoadAssetAsync<TextAsset>(Framework.AssetUtility.GetLubanAsset(file, lubanType, true));
+                return JSON.Parse(textAsset.text);
+            }
+            async Task<ByteBuf> LoadByteBuf(string file)
+            {
+                TextAsset textAsset = await GameEntry.Resource.LoadAssetAsync<TextAsset>(Framework.AssetUtility.GetLubanAsset(file, lubanType, true));
+                return new ByteBuf(textAsset.bytes);
+            }
             Delegate loader = loaderReturnType == typeof(Task<ByteBuf>) ? new Func<string, Task<ByteBuf>>(LoadByteBuf) : new Func<string, Task<JSONNode>>(LoadJson);
-            var tables = (Task)tablesCtor.Invoke(new object[] {loader});
-            await tables;
-            m_LoadedFlags.Remove("cfg.Tables");
-        }
-        
-        private async Task<JSONNode> LoadJson(string file)
-        {
-            TextAsset textAsset = await GameEntry.Resource.LoadAssetAsync<TextAsset>(Framework.AssetUtility.GetLubanAsset(file, true));
-            return JSON.Parse(textAsset.text);
-        }
+            var tables = Activator.CreateInstance(tablesType);
 
-        private async Task<ByteBuf> LoadByteBuf(string file)
-        {
-            TextAsset textAsset = await GameEntry.Resource.LoadAssetAsync<TextAsset>(Framework.AssetUtility.GetLubanAsset(file, true));
-            return new ByteBuf(textAsset.bytes);
+            var task = (Task)tablesCtor.Invoke(tables, new object[] {loader});
+            await task;
+            m_LoadedFlags.Remove(tablesType.FullName);
         }
 
         private void LoadConfig(string configName)

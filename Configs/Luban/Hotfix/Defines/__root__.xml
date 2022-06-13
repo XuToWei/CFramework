@@ -1,6 +1,6 @@
 <root>
 
-	<topmodule name="cfg"/>
+	<topmodule name="Hotfix.Model"/>
 
 	<patch name="cn"/>
 	<patch name="en"/>

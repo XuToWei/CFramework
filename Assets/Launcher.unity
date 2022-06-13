@@ -268,11 +268,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57eb7c15612322c4b929a325ad4bc16a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BindDatas: []
-  m_ClassName: Camera
-  m_Namespace: Hotfix
-  m_CodePath: D:/Study/CFramework/Codes/UI/Custom/BindComponents
-  m_BindComs: []
 --- !u!1 &470627540
 GameObject:
   m_ObjectHideFlags: 0
@@ -569,11 +564,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11454530, guid: adb3eb1c35fcff14f89fba7b05c9d71c, type: 3}
       propertyPath: m_UIFormHelperTypeName
-      value: 
+      value: Game.UGuiFormHelper
       objectReference: {fileID: 0}
     - target: {fileID: 11454530, guid: adb3eb1c35fcff14f89fba7b05c9d71c, type: 3}
       propertyPath: m_UIGroupHelperTypeName
-      value: 
+      value: Game.UGuiGroupHelper
       objectReference: {fileID: 0}
     - target: {fileID: 11454530, guid: adb3eb1c35fcff14f89fba7b05c9d71c, type: 3}
       propertyPath: m_UIGroups.Array.data[0].m_Name

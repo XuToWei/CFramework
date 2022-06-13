@@ -6,7 +6,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace cfg.item
+namespace Hotfix.Model.item
 {
     public enum EQuality
     {

@@ -8,7 +8,7 @@
 using Bright.Serialization;
 using System.Collections.Generic;
 
-namespace Hotfix.Model.item
+namespace Game.item
 {
    
 public partial class TbItem

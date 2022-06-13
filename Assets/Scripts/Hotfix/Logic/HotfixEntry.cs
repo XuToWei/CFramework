@@ -25,9 +25,10 @@ namespace Hotfix.Logic
             Fsm = new FsmManager();
             Procedure = new ProcedureManager();
             
-            Procedure.Initialize(Fsm);
+            Procedure.Initialize(Fsm,
+                new ProcedurePreload());
             
-            //Procedure.StartProcedure<>();
+            Procedure.StartProcedure<ProcedurePreload>();
         }
 
         public void OnUpdate(float elapseSeconds, float realElapseSeconds)
@@ -37,6 +38,11 @@ namespace Hotfix.Logic
         }
 
         public void OnApplicationPause(bool pauseStatus)
+        {
+            
+        }
+        
+        public void OnApplicationFocus(bool hasFocus)
         {
             
         }
@@ -51,11 +57,6 @@ namespace Hotfix.Logic
             Event.Shutdown();
             Fsm.Shutdown();
             Procedure.Shutdown();
-        }
-
-        public void OnApplicationFocus()
-        {
-            
         }
     }
 }

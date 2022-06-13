@@ -108,17 +108,17 @@ namespace Game
 
         public override void OnApplicationPause(bool pauseStatus)
         {
-            m_OnApplicationPauseMethodAction.Invoke(pauseStatus);
+            m_OnApplicationPauseMethodAction?.Invoke(pauseStatus);
         }
 
         public override void OnApplicationFocus(bool hasFocus)
         {
-            m_OnApplicationFocusMethodAction.Invoke(hasFocus);
+            m_OnApplicationFocusMethodAction?.Invoke(hasFocus);
         }
 
         public override void OnApplicationQuit()
         {
-            m_OnApplicationQuitMethodAction.Invoke();
+            m_OnApplicationQuitMethodAction?.Invoke();
         }
         
 #if UNITY_EDITOR

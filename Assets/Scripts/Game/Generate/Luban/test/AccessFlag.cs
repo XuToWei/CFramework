@@ -6,7 +6,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Hotfix.Model.test
+namespace Game.test
 {
     [System.Flags]
     public enum AccessFlag

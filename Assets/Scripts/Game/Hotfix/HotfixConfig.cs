@@ -17,7 +17,7 @@ namespace Game
             "Hotfix.LogicView",
         };
 
-        public static readonly string EntryTypeFullName = "Hotfix.HotfixEntry";
+        public static readonly string EntryTypeFullName = "Hotfix.Logic.HotfixEntry";
     }
 }
 

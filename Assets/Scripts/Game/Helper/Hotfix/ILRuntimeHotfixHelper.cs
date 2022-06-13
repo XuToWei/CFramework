@@ -100,6 +100,8 @@ namespace Game
         
         public override void OnApplicationPause(bool pauseStatus)
         {
+            if (m_OnApplicationPauseMethod == null)
+                return;
             using var ctx = m_AppDomain.BeginInvoke(m_OnApplicationPauseMethod);
             ctx.PushObject(m_EntryInstance);
             ctx.PushBool(pauseStatus);
@@ -108,6 +110,8 @@ namespace Game
 
         public override void OnApplicationFocus(bool hasFocus)
         {
+            if (m_OnApplicationFocusMethod == null)
+                return;
             using var ctx = m_AppDomain.BeginInvoke(m_OnApplicationFocusMethod);
             ctx.PushObject(m_EntryInstance);
             ctx.PushBool(hasFocus);
@@ -116,6 +120,8 @@ namespace Game
 
         public override void OnApplicationQuit()
         {
+            if (m_OnApplicationQuitMethod == null)
+                return;
             using var ctx = m_AppDomain.BeginInvoke(m_OnApplicationQuitMethod);
             ctx.PushObject(m_EntryInstance);
             ctx.Invoke();

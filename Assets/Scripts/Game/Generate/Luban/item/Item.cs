@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 
 
-namespace Hotfix.Model.item
+namespace Game.item
 {
 
 public sealed partial class Item :  Bright.Config.BeanBase 
