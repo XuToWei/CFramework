@@ -12,7 +12,12 @@ namespace Game.Editor
         {
             GameObject obj = GameObject.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(UGuiFormTemplate));
             obj.name = "Form";
-            obj.transform.SetParent(Selection.activeTransform);
+            RectTransform rectTransform = obj.GetComponent<RectTransform>();
+            rectTransform.SetParent(Selection.activeTransform);
+            rectTransform.localRotation = Quaternion.identity;
+            rectTransform.localScale = Vector3.one;
+            rectTransform.anchoredPosition = Vector3.zero;
+            rectTransform.sizeDelta = Vector3.zero;
         }
     }
 }
