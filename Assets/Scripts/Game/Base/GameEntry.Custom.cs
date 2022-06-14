@@ -11,6 +11,11 @@
         public static BuiltinComponent Builtin { get; private set; }
         
         /// <summary>
+        /// 摄像机组件
+        /// </summary>
+        public static CameraComponent Camera { get; private set; }
+        
+        /// <summary>
         /// 热更组件
         /// </summary>
         public static HotfixComponent Hotfix { get; private set; }
@@ -37,12 +42,14 @@
         
         private static void InitCustomComponents()
         {
-            Timer = UnityGameFramework.Runtime.GameEntry.GetComponent<TimerComponent>();
+            
             Builtin = UnityGameFramework.Runtime.GameEntry.GetComponent<BuiltinComponent>();
-            SpriteCollection = UnityGameFramework.Runtime.GameEntry.GetComponent<SpriteCollectionComponent>();
-            TextureSet = UnityGameFramework.Runtime.GameEntry.GetComponent<TextureComponent>();
+            Camera = UnityGameFramework.Runtime.GameEntry.GetComponent<CameraComponent>();
             Hotfix = UnityGameFramework.Runtime.GameEntry.GetComponent<HotfixComponent>();
             Screen = UnityGameFramework.Runtime.GameEntry.GetComponent<ScreenComponent>();
+            SpriteCollection = UnityGameFramework.Runtime.GameEntry.GetComponent<SpriteCollectionComponent>();
+            TextureSet = UnityGameFramework.Runtime.GameEntry.GetComponent<TextureComponent>();
+            Timer = UnityGameFramework.Runtime.GameEntry.GetComponent<TimerComponent>();
         }
     }
 }
