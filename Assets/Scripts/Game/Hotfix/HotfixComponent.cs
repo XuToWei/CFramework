@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using GameFramework;
-using GameFramework.Resource;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -10,15 +7,12 @@ namespace Game
 {
     public class HotfixComponent : GameFrameworkComponent
     {
-        [SerializeField] private string m_HotfixHelperTypeName;
-        [SerializeField] private HotfixHelperBase m_HotfixHelper;
+        [SerializeField] private HotfixType m_HotfixType;
 
-        public HotfixType HotfixType
-        {
-            private set;
-            get;
-        }
+        public HotfixType HotfixType => m_HotfixType;
         
+        private HotfixHelperBase m_HotfixHelper;
+
 #if ILRuntime
         public ILRuntimeHotfixHelper ILRuntime
         {
@@ -32,38 +26,42 @@ namespace Game
             private set;
             get;
         }
+        
+#if UNITY_EDITOR
+        public EditorHotfixHelper Editor
+        {
+            private set;
+            get;
+        }
+#endif
 
         private void Start()
         {
 #if ILRuntime
             if (!GameEntry.Base.EditorResourceMode)
             {
-                m_HotfixHelperTypeName = "Game.ILRuntimeHelper";
+                m_HotfixType = HotfixType.ILRuntime;
             }
 #endif
-            m_HotfixHelper = Helper.CreateHelper(m_HotfixHelperTypeName, m_HotfixHelper);
-            if (m_HotfixHelper == null)
-            {
-                Log.Error("Can not create hotfix helper.");
-                return;
-            }
 
-            HotfixType = m_HotfixHelper.HotfixType;
-            m_HotfixHelper.name = "Hotfix Helper";
-            Transform customHelperTrans = m_HotfixHelper.transform;
-            customHelperTrans.SetParent(transform);
-            customHelperTrans.localPosition = Vector3.zero;
-            customHelperTrans.localScale = Vector3.one;
             switch (HotfixType)
             {
                 case HotfixType.Undefined:
                     throw new GameFrameworkException("HotfixType Undefined!");
                 case HotfixType.Mono:
-                    Mono = m_HotfixHelper as MonoHotfixHelper;
+                    Mono = new MonoHotfixHelper();
+                    m_HotfixHelper = Mono;
                     break;
 #if ILRuntime
                 case HotfixType.ILRuntime:
-                    ILRuntime = m_HotfixHelper as ILRuntimeHotfixHelper;
+                    ILRuntime = new ILRuntimeHotfixHelper();
+                    m_HotfixHelper = ILRuntime;
+                    break;
+#endif
+#if UNITY_EDITOR
+                case HotfixType.Editor:
+                    Editor = new EditorHotfixHelper();
+                    m_HotfixHelper = Editor;
                     break;
 #endif
             }
@@ -110,14 +108,13 @@ namespace Game
         }
 
 #if UNITY_EDITOR
-
         public void Reload()
         {
-            if (m_HotfixHelper is not MonoHotfixHelper mono)
+            if (m_HotfixType != HotfixType.Mono)
             {
-                throw new GameFrameworkException(Utility.Text.Format("[0] can't reload, can use Game.MonoHelper to reload!", m_HotfixHelperTypeName));
+                throw new GameFrameworkException(Utility.Text.Format("[0] can't reload, can use Game.MonoHelper to reload!", m_HotfixType));
             }
-            mono.Reload();
+            Mono.Reload();
         }
 #endif
     }

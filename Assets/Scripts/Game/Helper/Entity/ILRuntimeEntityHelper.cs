@@ -9,8 +9,6 @@ namespace Game
 {
     internal sealed class ILRuntimeEntityHelper : HotfixEntityHelperBase
     {
-        private static readonly string s_HotfixProxyType = "Hotfix.Framework.EntityLogicProxy";
-        private string m_HotfixEntityType;
         private object m_HotfixProxyInstance;
         
         private IMethod m_OnInitMethod;
@@ -24,11 +22,11 @@ namespace Game
         private IMethod m_OnUpdateMethod;
         private IMethod m_InternalSetVisibleMethod;
 
-        protected internal override void OnInit(string hotfixEntityType, object userData)
+        protected internal override void OnInit(string hotfixEntityType, HotfixEntity hotfixEntity, object userData)
         {
-            ILType hotfixProxyType = GameEntry.Hotfix.ILRuntime.AppDomain.LoadedTypes[s_HotfixProxyType] as ILType;
-            //调用无参数静态方法，appdomain.Invoke("类名", "方法名", 对象引用, 参数列表);
-            m_HotfixProxyInstance = GameEntry.Hotfix.ILRuntime.AppDomain.Invoke(s_HotfixProxyType, "Acquire", null, null);
+            ILType hotfixProxyType = GameEntry.Hotfix.ILRuntime.AppDomain.LoadedTypes[HotfixProxyTypeName] as ILType;
+            m_HotfixProxyInstance = GameEntry.Hotfix.ILRuntime.AppDomain.Invoke(HotfixProxyTypeName, "Acquire", null, null);
+            
             m_OnInitMethod = hotfixProxyType.GetMethod("OnInit");
             m_OnShowMethod = hotfixProxyType.GetMethod("OnShow");
             m_OnHideMethod = hotfixProxyType.GetMethod("OnHide");
@@ -42,6 +40,8 @@ namespace Game
 
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnInitMethod);
             ctx.PushObject(m_HotfixProxyInstance);
+            ctx.PushObject(hotfixEntityType);
+            ctx.PushObject(hotfixEntity);
             ctx.PushObject(userData);
             ctx.Invoke();
         }
@@ -137,7 +137,8 @@ namespace Game
             m_OnDetachFromMethod = default;
             m_OnUpdateMethod = default;
             m_InternalSetVisibleMethod = default;
-            GameEntry.Hotfix.ILRuntime.AppDomain.Invoke(s_HotfixProxyType, "Release", null, m_HotfixProxyInstance);
+            
+            GameEntry.Hotfix.ILRuntime.AppDomain.Invoke(HotfixProxyTypeName, "Release", null, m_HotfixProxyInstance);
             m_HotfixProxyInstance = default;
         }
     }

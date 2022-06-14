@@ -6,7 +6,8 @@ namespace Game
 {
     internal abstract class HotfixEntityHelperBase : IReference
     {
-        protected internal abstract void OnInit(string hotfixEntityLogicType, object userData);
+        protected string HotfixProxyTypeName => "Hotfix.Framework.EntityLogicProxy";
+        protected internal abstract void OnInit(string hotfixEntityLogicType, HotfixEntity hotfixEntity, object userData);
         protected internal abstract void OnRecycle();
         protected internal abstract void OnShow(object userData);
         protected internal abstract void OnHide(bool isShutdown, object userData);

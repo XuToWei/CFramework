@@ -63,5 +63,15 @@ namespace Game
         {
             return Utility.Text.Format("{0}{1}.pdb.bytes", HotfixConfig.DllFolderPath, assetName);
         }
+        
+        public static string GetHotfixLubanAsset(string assetName, bool fromBytes)
+        {
+            return Utility.Text.Format("Assets/Res/Luban/Hotfix/{0}.{1}", assetName, fromBytes ? "bytes" : "json");
+        }
+        
+        public static string GetGameLubanAsset(string assetName, bool fromBytes)
+        {
+            return Utility.Text.Format("Assets/Res/Luban/Game/{0}.{1}", assetName, fromBytes ? "bytes" : "json");
+        }
     }
 }

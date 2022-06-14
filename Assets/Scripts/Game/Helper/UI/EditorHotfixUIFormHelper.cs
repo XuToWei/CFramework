@@ -1,8 +1,9 @@
+#if UNITY_EDITOR
 using System;
 
 namespace Game
 {
-    internal sealed class MonoHotfixUIFormHelper : HotfixUIFormHelperBase
+    internal sealed class EditorUIFormHelper : HotfixUIFormHelperBase
     {
         private Type m_HotfixProxyType;
         private object m_HotfixProxyInstance;
@@ -22,21 +23,21 @@ namespace Game
         
         protected internal override void OnInit(string hotfixUIFormType, HotfixUIForm hotfixUIForm, object userData)
         { 
-            m_HotfixProxyType = GameEntry.Hotfix.Mono.GetHotfixType(HotfixProxyTypeName);
-            m_HotfixProxyInstance = GameEntry.Hotfix.Mono.Invoke(m_HotfixProxyType, "Acquire", null, null);
+            m_HotfixProxyType = GameEntry.Hotfix.Editor.GetHotfixType(HotfixProxyTypeName);
+            m_HotfixProxyInstance = GameEntry.Hotfix.Editor.Invoke(m_HotfixProxyType, "Acquire", null, null);
             
-            m_OnInitAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<string, HotfixUIForm, object>>(m_HotfixProxyType, m_HotfixProxyInstance, "OnInit");
-            m_OnOpenAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<object>>(m_HotfixProxyType, m_HotfixProxyInstance, "OnOpen");
-            m_OnRecycleAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action>(m_HotfixProxyType, m_HotfixProxyInstance, "OnRecycle");
-            m_OnCloseAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<bool, object>>(m_HotfixProxyType, m_HotfixProxyInstance, "OnClose");
-            m_OnPauseAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action>(m_HotfixProxyType, m_HotfixProxyInstance, "OnPause");
-            m_OnResumeAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action>(m_HotfixProxyType, m_HotfixProxyInstance, "OnResume");
-            m_OnCoverAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action>(m_HotfixProxyType, m_HotfixProxyInstance, "OnCover");
-            m_OnRevealAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action>(m_HotfixProxyType, m_HotfixProxyInstance, "OnReveal");
-            m_OnRefocusAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<object>>(m_HotfixProxyType, m_HotfixProxyInstance, "OnRefocus");
-            m_OnUpdateAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<float, float>>(m_HotfixProxyType, m_HotfixProxyInstance, "OnUpdate");
-            m_OnDepthChangedAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<int, int>>(m_HotfixProxyType, m_HotfixProxyInstance, "OnDepthChanged");
-            m_InternalSetVisibleAction = GameEntry.Hotfix.Mono.CreateMethodAction<Action<bool>>(m_HotfixProxyType, m_HotfixProxyInstance, "InternalSetVisible");
+            m_OnInitAction = GameEntry.Hotfix.Editor.CreateMethodAction<Action<string, HotfixUIForm, object>>(m_HotfixProxyType, m_HotfixProxyInstance, "OnInit");
+            m_OnOpenAction = GameEntry.Hotfix.Editor.CreateMethodAction<Action<object>>(m_HotfixProxyType, m_HotfixProxyInstance, "OnOpen");
+            m_OnRecycleAction = GameEntry.Hotfix.Editor.CreateMethodAction<Action>(m_HotfixProxyType, m_HotfixProxyInstance, "OnRecycle");
+            m_OnCloseAction = GameEntry.Hotfix.Editor.CreateMethodAction<Action<bool, object>>(m_HotfixProxyType, m_HotfixProxyInstance, "OnClose");
+            m_OnPauseAction = GameEntry.Hotfix.Editor.CreateMethodAction<Action>(m_HotfixProxyType, m_HotfixProxyInstance, "OnPause");
+            m_OnResumeAction = GameEntry.Hotfix.Editor.CreateMethodAction<Action>(m_HotfixProxyType, m_HotfixProxyInstance, "OnResume");
+            m_OnCoverAction = GameEntry.Hotfix.Editor.CreateMethodAction<Action>(m_HotfixProxyType, m_HotfixProxyInstance, "OnCover");
+            m_OnRevealAction = GameEntry.Hotfix.Editor.CreateMethodAction<Action>(m_HotfixProxyType, m_HotfixProxyInstance, "OnReveal");
+            m_OnRefocusAction = GameEntry.Hotfix.Editor.CreateMethodAction<Action<object>>(m_HotfixProxyType, m_HotfixProxyInstance, "OnRefocus");
+            m_OnUpdateAction = GameEntry.Hotfix.Editor.CreateMethodAction<Action<float, float>>(m_HotfixProxyType, m_HotfixProxyInstance, "OnUpdate");
+            m_OnDepthChangedAction = GameEntry.Hotfix.Editor.CreateMethodAction<Action<int, int>>(m_HotfixProxyType, m_HotfixProxyInstance, "OnDepthChanged");
+            m_InternalSetVisibleAction = GameEntry.Hotfix.Editor.CreateMethodAction<Action<bool>>(m_HotfixProxyType, m_HotfixProxyInstance, "InternalSetVisible");
             
             m_OnInitAction.Invoke(hotfixUIFormType, hotfixUIForm, userData);
         }
@@ -111,9 +112,10 @@ namespace Game
             m_OnDepthChangedAction = default;
             m_InternalSetVisibleAction = default;
 
-            GameEntry.Hotfix.Mono.Invoke(m_HotfixProxyType, "Release", null, m_HotfixProxyInstance);
+            GameEntry.Hotfix.Editor.Invoke(m_HotfixProxyType, "Release", null, m_HotfixProxyInstance);
             m_HotfixProxyType = default;
             m_HotfixProxyInstance = default;
         }
     }
 }
+#endif

@@ -28,7 +28,13 @@ namespace Game
                 m_HotfixUIFormHelper = ReferencePool.Acquire<ILRuntimeUIFormHelper>();
             }
 #endif
-            m_HotfixUIFormHelper.OnInit(m_HotfixUIFormType, userData);
+#if UNITY_EDITOR
+            else if (GameEntry.Hotfix.HotfixType == HotfixType.ILRuntime)
+            {
+                m_HotfixUIFormHelper = ReferencePool.Acquire<EditorUIFormHelper>();
+            }
+#endif
+            m_HotfixUIFormHelper.OnInit(m_HotfixUIFormType, this, userData);
         }
         
         private void OnDestroy()

@@ -7,8 +7,7 @@ namespace Game
 {
     internal sealed class ILRuntimeUIFormHelper : HotfixUIFormHelperBase
     {
-        private ILType m_HotfixType;
-        private object m_HotfixInstance;
+        private object m_HotfixProxyInstance;
         
         private IMethod m_OnInitMethod;
         private IMethod m_OnRecycleMethod;
@@ -23,25 +22,28 @@ namespace Game
         private IMethod m_OnDepthChangedMethod;
         private IMethod m_InternalSetVisibleMethod;
         
-        protected internal override void OnInit(string hotfixUIFormType, object userData)
+        protected internal override void OnInit(string hotfixUIFormType, HotfixUIForm hotfixUIForm, object userData)
         {
-            m_HotfixType = GameEntry.Hotfix.ILRuntime.AppDomain.LoadedTypes[hotfixUIFormType] as ILType;
-            m_HotfixInstance = m_HotfixType.Instantiate();
-            m_OnInitMethod = m_HotfixType.GetMethod("OnInit");
-            m_OnRecycleMethod = m_HotfixType.GetMethod("OnRecycle");
-            m_OnOpenMethod = m_HotfixType.GetMethod("OnOpen");
-            m_OnCloseMethod = m_HotfixType.GetMethod("OnClose");
-            m_OnPauseMethod = m_HotfixType.GetMethod("OnPause");
-            m_OnResumeMethod = m_HotfixType.GetMethod("OnResume");
-            m_OnCoverMethod = m_HotfixType.GetMethod("OnCover");
-            m_OnRevealMethod = m_HotfixType.GetMethod("OnReveal");
-            m_OnRefocusMethod = m_HotfixType.GetMethod("OnRefocus");
-            m_OnUpdateMethod = m_HotfixType.GetMethod("OnUpdate");
-            m_OnDepthChangedMethod = m_HotfixType.GetMethod("OnDepthChanged");
-            m_InternalSetVisibleMethod = m_HotfixType.GetMethod("InternalSetVisible");
+            ILType hotfixProxyType = GameEntry.Hotfix.ILRuntime.AppDomain.LoadedTypes[HotfixProxyTypeName] as ILType;
+            m_HotfixProxyInstance = GameEntry.Hotfix.ILRuntime.AppDomain.Invoke(HotfixProxyTypeName, "Acquire", null, null);
+            
+            m_OnInitMethod = hotfixProxyType.GetMethod("OnInit");
+            m_OnRecycleMethod = hotfixProxyType.GetMethod("OnRecycle");
+            m_OnOpenMethod = hotfixProxyType.GetMethod("OnOpen");
+            m_OnCloseMethod = hotfixProxyType.GetMethod("OnClose");
+            m_OnPauseMethod = hotfixProxyType.GetMethod("OnPause");
+            m_OnResumeMethod = hotfixProxyType.GetMethod("OnResume");
+            m_OnCoverMethod = hotfixProxyType.GetMethod("OnCover");
+            m_OnRevealMethod = hotfixProxyType.GetMethod("OnReveal");
+            m_OnRefocusMethod = hotfixProxyType.GetMethod("OnRefocus");
+            m_OnUpdateMethod = hotfixProxyType.GetMethod("OnUpdate");
+            m_OnDepthChangedMethod = hotfixProxyType.GetMethod("OnDepthChanged");
+            m_InternalSetVisibleMethod = hotfixProxyType.GetMethod("InternalSetVisible");
             
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnInitMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
+            ctx.PushObject(hotfixUIFormType);
+            ctx.PushObject(hotfixUIForm);
             ctx.PushObject(userData);
             ctx.Invoke();
         }
@@ -49,14 +51,14 @@ namespace Game
         protected internal override void OnRecycle()
         {
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnRecycleMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.Invoke();
         }
 
         protected internal override void OnOpen(object userData)
         {
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnOpenMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.PushObject(userData);
             ctx.Invoke();
         }
@@ -64,7 +66,7 @@ namespace Game
         protected internal override void OnClose(bool isShutdown, object userData)
         {
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnCloseMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.PushBool(isShutdown);
             ctx.PushObject(userData);
             ctx.Invoke();
@@ -73,42 +75,42 @@ namespace Game
         protected internal override void OnPause()
         {
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnPauseMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.Invoke();
         }
 
         protected internal override void OnResume()
         {
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnResumeMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.Invoke();
         }
 
         protected internal override void OnCover()
         {
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnCoverMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.Invoke();
         }
 
         protected internal override void OnReveal()
         {
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnRevealMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.Invoke();
         }
 
         protected internal override void OnRefocus(object userData)
         {
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnRefocusMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.Invoke();
         }
 
         protected internal override void OnUpdate(float elapseSeconds, float realElapseSeconds)
         {
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnUpdateMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.PushFloat(elapseSeconds);
             ctx.PushFloat(realElapseSeconds);
             ctx.Invoke();
@@ -117,7 +119,7 @@ namespace Game
         protected internal override void OnDepthChanged(int uiGroupDepth, int depthInUIGroup)
         {
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_OnDepthChangedMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.PushInteger(uiGroupDepth);
             ctx.PushInteger(depthInUIGroup);
             ctx.Invoke();
@@ -126,15 +128,13 @@ namespace Game
         protected internal override void InternalSetVisible(bool visible)
         {
             using InvocationContext ctx = GameEntry.Hotfix.ILRuntime.AppDomain.BeginInvoke(m_InternalSetVisibleMethod);
-            ctx.PushObject(m_HotfixInstance);
+            ctx.PushObject(m_HotfixProxyInstance);
             ctx.PushBool(visible);
             ctx.Invoke();
         }
 
         public override void Clear()
         {
-            m_HotfixType = null;
-            m_HotfixInstance = null;
             m_OnInitMethod = null;
             m_OnRecycleMethod = null;
             m_OnOpenMethod = null;
@@ -147,6 +147,9 @@ namespace Game
             m_OnUpdateMethod = null;
             m_OnDepthChangedMethod = null;
             m_InternalSetVisibleMethod = null;
+            
+            GameEntry.Hotfix.ILRuntime.AppDomain.Invoke(HotfixProxyTypeName, "Release", null, m_HotfixProxyInstance);
+            m_HotfixProxyInstance = default;
         }
     }
 }

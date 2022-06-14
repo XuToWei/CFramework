@@ -1,15 +1,13 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Reflection;
+using System.Threading.Tasks;
 using GameFramework;
-using GameFramework.Resource;
-using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace Game
 {
-    public class MonoHotfixHelper : HotfixHelperBase
+    public class EditorHotfixHelper : HotfixHelperBase
     {
         public override HotfixType HotfixType => HotfixType.Mono;
         
@@ -52,21 +50,14 @@ namespace Game
 
         public override async Task Load()
         {
+            
+        }
+        
+        public override void Init()
+        {
             foreach (var dllName in HotfixConfig.DllNames)
             {
-                string dllAssetName = AssetUtility.GetHotfixDllAsset(dllName);
-                TextAsset dllAsset = await GameEntry.Resource.LoadAssetAsync<TextAsset>(dllAssetName);
-                string pdbAssetName = AssetUtility.GetHotfixPdbAsset(dllName);
-                Assembly assembly;
-                if (GameEntry.Resource.HasAsset(pdbAssetName) == HasAssetResult.NotExist)
-                {
-                    assembly = Assembly.Load(dllAsset.bytes);
-                }
-                else
-                {
-                    TextAsset pdbAsset = await GameEntry.Resource.LoadAssetAsync<TextAsset>(pdbAssetName);
-                    assembly = Assembly.Load(dllAsset.bytes, pdbAsset.bytes);
-                }
+                Assembly assembly = Assembly.Load(dllName);
                 foreach (var type in assembly.GetTypes())
                 {
                     if (!string.IsNullOrEmpty(type.FullName))
@@ -76,11 +67,6 @@ namespace Game
                 }
             }
             
-            Log.Info("Hotfix mono load completed!");
-        }
-        
-        public override void Init()
-        {
             m_EntryType = GetHotfixType(HotfixConfig.EntryTypeFullName);
             m_EntryInstance = CreateInstance(m_EntryType);
             m_OnEnterMethodAction = CreateMethodAction<Action>(m_EntryType, m_EntryInstance, "OnEnter");
@@ -120,34 +106,6 @@ namespace Game
         {
             m_OnApplicationQuitMethodAction?.Invoke();
         }
-        
-#if UNITY_EDITOR
-        public void Reload()
-        {
-            foreach (var dllName in HotfixConfig.ReloadDllNames)
-            {
-                string dllAssetName = AssetUtility.GetHotfixDllAsset(dllName);
-                byte[] dllBytes = System.IO.File.ReadAllBytes(dllAssetName);
-                string pdbAssetName = AssetUtility.GetHotfixPdbAsset(dllName);
-                Assembly assembly;
-                if (!System.IO.File.Exists(pdbAssetName))
-                {
-                    assembly = Assembly.Load(dllBytes);
-                }
-                else
-                {
-                    byte[] pdbBytes = System.IO.File.ReadAllBytes(pdbAssetName);
-                    assembly = Assembly.Load(dllBytes, pdbBytes);
-                }
-                foreach (var type in assembly.GetTypes())
-                {
-                    if (type.FullName != null)
-                    {
-                        m_HotfixTypeDict[type.FullName] = type;
-                    }
-                }
-            }
-        }
-#endif
     }
 }
+#endif

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game
 {
-    public abstract class HotfixHelperBase : MonoBehaviour, IHotfixHelper 
+    public abstract class HotfixHelperBase : IHotfixHelper 
     {
         public abstract HotfixType HotfixType { get; }
         public abstract Task Load();

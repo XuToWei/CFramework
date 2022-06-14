@@ -1,4 +1,3 @@
-using System;
 using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -22,7 +21,7 @@ namespace Game
                 m_EntityLogicHelper = ReferencePool.Acquire<ILRuntimeEntityHelper>();
             }
 #endif
-            m_EntityLogicHelper.OnInit(entityData.HotfixEntityType, entityData.UserData);
+            m_EntityLogicHelper.OnInit(entityData.HotfixEntityType, this, entityData.UserData);
         }
 
         private void OnDestroy()

@@ -4,7 +4,8 @@ namespace Game
 {
     internal abstract class HotfixUIFormHelperBase : IReference
     {
-        protected internal abstract void OnInit(string hotfixUIFormType, object userData);
+        protected string HotfixProxyTypeName => "Hotfix.Framework.UIFormLogicProxy";
+        protected internal abstract void OnInit(string hotfixUIFormType, HotfixUIForm hotfixUIForm, object userData);
         protected internal abstract void OnRecycle();
         protected internal abstract void OnOpen(object userData);
         protected internal abstract void OnClose(bool isShutdown, object userData);

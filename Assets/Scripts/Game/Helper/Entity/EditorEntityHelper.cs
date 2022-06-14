@@ -1,10 +1,11 @@
+#if UNITY_EDITOR
 using System;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Game
 {
-    internal sealed class MonoEntityHelper : HotfixEntityHelperBase
+    internal sealed class EditorEntityHelper : HotfixEntityHelperBase
     {
         private Type m_HotfixProxyType;
         private object m_HotfixProxyInstance;
@@ -103,3 +104,4 @@ namespace Game
         }
     }
 }
+#endif

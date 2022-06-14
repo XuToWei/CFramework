@@ -13,5 +13,10 @@ namespace Game
         /// ILRuntime
         /// </summary>
         ILRuntime = 2,
+        
+        /// <summary>
+        /// Unity Editor
+        /// </summary>
+        Editor = 3,
     }
 }
