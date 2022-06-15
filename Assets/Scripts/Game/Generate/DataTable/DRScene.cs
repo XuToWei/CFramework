@@ -1,6 +1,6 @@
 ﻿//------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
-// 生成时间：2021-07-13 17:37:11.350
+// 生成时间：2022-06-15 19:22:48.126
 //------------------------------------------------------------
 
 using GameFramework;
@@ -8,12 +8,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Game
 {
     /// <summary>
-    /// 场景配置表。
+    /// Scene。
     /// </summary>
     public class DRScene : DataRowBase
     {
@@ -60,8 +61,12 @@ namespace Game
             index++;
             m_Id = int.Parse(columnStrings[index++]);
             index++;
-			AssetName = columnStrings[index++];
-			BackgroundMusicId = int.Parse(columnStrings[index++]);
+            AssetName = columnStrings[index++];
+            BackgroundMusicId = int.Parse(columnStrings[index++]);
+            index++;
+            index++;
+            index++;
+
             GeneratePropertyArray();
             return true;
         }

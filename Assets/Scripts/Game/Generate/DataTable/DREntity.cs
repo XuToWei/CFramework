@@ -1,15 +1,20 @@
 ﻿//------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
-// 生成时间：2021-07-13 17:37:11.298
+// 生成时间：2022-06-15 19:22:48.119
 //------------------------------------------------------------
+
+using GameFramework;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Game
 {
     /// <summary>
-    /// 实体表。
+    /// Entity。
     /// </summary>
     public class DREntity : DataRowBase
     {
@@ -44,6 +49,15 @@ namespace Game
             private set;
         }
 
+        /// <summary>
+        /// 获取加载优先级。
+        /// </summary>
+        public int Priority
+        {
+            get;
+            private set;
+        }
+
         public override bool ParseDataRow(string dataRowString, object userData)
         {
             string[] columnStrings = dataRowString.Split(DataTableExtension.DataSplitSeparators);
@@ -56,8 +70,12 @@ namespace Game
             index++;
             m_Id = int.Parse(columnStrings[index++]);
             index++;
-			AssetName = columnStrings[index++];
-			EntityGroupName = columnStrings[index++];
+            AssetName = columnStrings[index++];
+            EntityGroupName = columnStrings[index++];
+            Priority = int.Parse(columnStrings[index++]);
+            index++;
+            index++;
+
             GeneratePropertyArray();
             return true;
         }
@@ -71,6 +89,7 @@ namespace Game
                     m_Id = binaryReader.Read7BitEncodedInt32();
                     AssetName = binaryReader.ReadString();
                     EntityGroupName = binaryReader.ReadString();
+                    Priority = binaryReader.Read7BitEncodedInt32();
                 }
             }
 

@@ -1,6 +1,6 @@
 ﻿//------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
-// 生成时间：2021-07-13 17:37:11.386
+// 生成时间：2022-06-15 19:22:48.129
 //------------------------------------------------------------
 
 using GameFramework;
@@ -8,12 +8,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Game
 {
     /// <summary>
-    /// 声音配置表。
+    /// UISound。
     /// </summary>
     public class DRUISound : DataRowBase
     {
@@ -57,6 +58,15 @@ namespace Game
             private set;
         }
 
+        /// <summary>
+        /// 获取是否暂停被其覆盖的界面。
+        /// </summary>
+        public bool PauseCoveredUIForm
+        {
+            get;
+            private set;
+        }
+
         public override bool ParseDataRow(string dataRowString, object userData)
         {
             string[] columnStrings = dataRowString.Split(DataTableExtension.DataSplitSeparators);
@@ -69,9 +79,12 @@ namespace Game
             index++;
             m_Id = int.Parse(columnStrings[index++]);
             index++;
-			AssetName = columnStrings[index++];
-			Priority = int.Parse(columnStrings[index++]);
-			Volume = float.Parse(columnStrings[index++]);
+            AssetName = columnStrings[index++];
+            Priority = int.Parse(columnStrings[index++]);
+            Volume = float.Parse(columnStrings[index++]);
+            PauseCoveredUIForm = bool.Parse(columnStrings[index++]);
+            index++;
+
             GeneratePropertyArray();
             return true;
         }
@@ -86,6 +99,7 @@ namespace Game
                     AssetName = binaryReader.ReadString();
                     Priority = binaryReader.Read7BitEncodedInt32();
                     Volume = binaryReader.ReadSingle();
+                    PauseCoveredUIForm = binaryReader.ReadBoolean();
                 }
             }
 

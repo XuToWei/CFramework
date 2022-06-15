@@ -1,6 +1,6 @@
 ﻿//------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
-// 生成时间：2021-07-13 17:37:11.369
+// 生成时间：2022-06-15 19:22:48.133
 //------------------------------------------------------------
 
 using GameFramework;
@@ -8,12 +8,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Game
 {
     /// <summary>
-    /// 声音配置表。
+    /// Sound。
     /// </summary>
     public class DRSound : DataRowBase
     {
@@ -96,12 +97,13 @@ namespace Game
             index++;
             m_Id = int.Parse(columnStrings[index++]);
             index++;
-			AssetName = columnStrings[index++];
-			Priority = int.Parse(columnStrings[index++]);
-			Loop = bool.Parse(columnStrings[index++]);
-			Volume = float.Parse(columnStrings[index++]);
-			SpatialBlend = float.Parse(columnStrings[index++]);
-			MaxDistance = float.Parse(columnStrings[index++]);
+            AssetName = columnStrings[index++];
+            Priority = int.Parse(columnStrings[index++]);
+            Loop = bool.Parse(columnStrings[index++]);
+            Volume = float.Parse(columnStrings[index++]);
+            SpatialBlend = float.Parse(columnStrings[index++]);
+            MaxDistance = float.Parse(columnStrings[index++]);
+
             GeneratePropertyArray();
             return true;
         }
