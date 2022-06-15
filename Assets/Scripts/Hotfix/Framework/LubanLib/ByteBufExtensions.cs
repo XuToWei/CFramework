@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bright.Serialization
+namespace Hotfix.Bright.Serialization
 {
     public static class ByteBufExtensions
     {

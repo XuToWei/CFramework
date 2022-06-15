@@ -1,6 +1,6 @@
 using Bright.Serialization;
 
-namespace Bright.Config
+namespace Hotfix.Bright.Config
 {
     public abstract class BeanBase : ITypeId
     {

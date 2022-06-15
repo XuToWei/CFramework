@@ -1,4 +1,4 @@
-﻿namespace Bright.Serialization
+﻿namespace Hotfix.Bright.Serialization
 {
     public interface ITypeId
     {

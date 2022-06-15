@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Bright.Common
+namespace Hotfix.Bright.Common
 {
     public static class StringUtil
     {
