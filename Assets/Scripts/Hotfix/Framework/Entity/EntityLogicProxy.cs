@@ -21,12 +21,13 @@ namespace Hotfix.Framework
         
         public void Clear()
         {
-            ReferencePool.Release(m_EntityLogic);
+            m_EntityLogic.Clear();
+            m_EntityLogic = null;
         }
         
         public void OnInit(string entityLogicType, HotfixEntity hotfixEntity, object userData)
         {
-            m_EntityLogic = ReferencePool.Acquire(Type.GetType(entityLogicType)) as EntityLogic;
+            m_EntityLogic = GameEntry.Hotfix.CreateInstance(entityLogicType) as EntityLogic;
             m_EntityLogic.Fill(hotfixEntity);
             m_EntityLogic.OnInit(userData);
         }

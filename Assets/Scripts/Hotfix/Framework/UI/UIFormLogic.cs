@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using Game;
 using UnityEngine;
 
 namespace Hotfix.Framework
 {
-    public abstract class UIFormLogic : IReference
+    public abstract class UIFormLogic
     {
         private HotfixUIForm m_GameUIForm = null;
 
@@ -13,6 +11,11 @@ namespace Hotfix.Framework
         /// 获取界面。
         /// </summary>
         public UnityGameFramework.Runtime.UIForm UIForm => m_GameUIForm.UIForm;
+        
+        /// <summary>
+        /// 获取界面逻辑。
+        /// </summary>
+        public HotfixUIForm GameUIForm => m_GameUIForm;
 
         /// <summary>
         /// 获取或设置界面名称。

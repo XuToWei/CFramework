@@ -1,4 +1,4 @@
-using Bright.Serialization;
+using Hotfix.Bright.Serialization;
 
 namespace Hotfix.Bright.Config
 {

@@ -1,5 +1,6 @@
 using System;
 using Game;
+using UnityEngine;
 
 namespace Hotfix.Framework
 {
@@ -20,12 +21,13 @@ namespace Hotfix.Framework
         
         public void Clear()
         {
-            ReferencePool.Release(m_UIFormLogic);
+            m_UIFormLogic.Clear();
+            m_UIFormLogic = default;
         }
         
         public void OnInit(string uiFormLogicType, HotfixUIForm hotfixUIForm, object userData)
         {
-            m_UIFormLogic = ReferencePool.Acquire(Type.GetType(uiFormLogicType)) as UIFormLogic;
+            m_UIFormLogic = GameEntry.Hotfix.CreateInstance(uiFormLogicType) as UIFormLogic;
             m_UIFormLogic.Fill(hotfixUIForm);
             m_UIFormLogic.OnInit(userData);
         }
