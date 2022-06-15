@@ -18,6 +18,8 @@ namespace Game.Editor.DataTableTools
         {
             foreach (string dataTableName in ExcelExtension.ExcelToTxt())
             {
+                if(dataTableName == "DefaultConfig")
+                    continue;
                 DataTableProcessor dataTableProcessor = DataTableGenerator.CreateDataTableProcessor(dataTableName);
                 if (!DataTableGenerator.CheckRawData(dataTableProcessor, dataTableName))
                 {
@@ -31,7 +33,6 @@ namespace Game.Editor.DataTableTools
 
             //生成luban配置
             LubanRunner.GenerateBin();
-            Debug.Log("+++++++++++++++++++++++");
             AssetDatabase.Refresh();
         }
 
@@ -40,6 +41,8 @@ namespace Game.Editor.DataTableTools
         {
             foreach (string dataTableName in ExcelExtension.ExcelToTxt())
             {
+                if(dataTableName == "DefaultConfig")
+                    continue;
                 DataTableProcessor dataTableProcessor = DataTableGenerator.CreateDataTableProcessor(dataTableName);
                 if (!DataTableGenerator.CheckRawData(dataTableProcessor, dataTableName))
                 {
