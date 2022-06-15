@@ -59,21 +59,7 @@ namespace Game
             m_CachedCanvas.overrideSorting = true;
             OriginalDepth = m_CachedCanvas.sortingOrder;
 
-            m_CanvasGroup = gameObject.GetOrAddComponent<CanvasGroup>();
-
-            RectTransform transform = GetComponent<RectTransform>();
-            transform.anchorMin = Vector2.zero;
-            transform.anchorMax = Vector2.one;
-            transform.anchoredPosition = Vector2.zero;
-            transform.sizeDelta = Vector2.zero;
-
             gameObject.GetOrAddComponent<GraphicRaycaster>();
-            // 文本的本地化
-            // Text[] texts = GetComponentsInChildren<Text>(true);
-            // for (int i = 0; i < texts.Length; i++)
-            // {
-            //     texts[i].text = GameEntry.Localization.GetString(texts[i].text);
-            // }
         }
 
 #if UNITY_2017_3_OR_NEWER
@@ -92,10 +78,6 @@ namespace Game
 #endif
         {
             base.OnOpen(userData);
-
-            m_CanvasGroup.alpha = 0f;
-            StopAllCoroutines();
-            StartCoroutine(m_CanvasGroup.FadeToAlpha(1f, FadeTime));
         }
 
 #if UNITY_2017_3_OR_NEWER
@@ -123,10 +105,6 @@ namespace Game
 #endif
         {
             base.OnResume();
-
-            m_CanvasGroup.alpha = 0f;
-            StopAllCoroutines();
-            StartCoroutine(m_CanvasGroup.FadeToAlpha(1f, FadeTime));
         }
 
 #if UNITY_2017_3_OR_NEWER

@@ -10,11 +10,21 @@ namespace Game
     public class HotfixUIForm : UGuiForm
     {
         /// <summary>
+        /// 热更命名空间
+        /// </summary>
+        [SerializeField] private string m_HotfixNameSpace;
+        
+        /// <summary>
         /// 对应的热更新层UGUI界面类名
         /// </summary>
-        [SerializeField] private string m_HotfixUIFormType;
+        [SerializeField] private string m_HotfixClassName;
 
+        public string HotfixNameSpace => m_HotfixNameSpace;
+        
+        public string HotfixClassName => m_HotfixClassName;
+        
         private HotfixUIFormHelperBase m_HotfixUIFormHelper;
+        
         protected override void OnInit(object userData)
         {
             base.OnInit(userData);
@@ -29,12 +39,12 @@ namespace Game
             }
 #endif
 #if UNITY_EDITOR
-            else if (GameEntry.Hotfix.HotfixType == HotfixType.ILRuntime)
+            else if (GameEntry.Hotfix.HotfixType == HotfixType.Editor)
             {
                 m_HotfixUIFormHelper = ReferencePool.Acquire<EditorUIFormHelper>();
             }
 #endif
-            m_HotfixUIFormHelper.OnInit(m_HotfixUIFormType, this, userData);
+            m_HotfixUIFormHelper.OnInit(Utility.Text.Format("{0}.{1}", m_HotfixNameSpace, m_HotfixClassName), this, userData);
         }
         
         private void OnDestroy()
