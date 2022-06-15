@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace Game
 {
-    public abstract class HotfixHelperBase : IHotfixHelper 
+    public abstract class HotfixHelperBase
     {
         public abstract HotfixType HotfixType { get; }
         public abstract Task Load();
@@ -14,5 +13,6 @@ namespace Game
         public abstract void OnApplicationFocus(bool hasFocus);
         public abstract void OnApplicationQuit();
         public abstract void OnUpdate(float elapseSeconds, float realElapseSeconds);
+        public abstract object CreateInstance(string hotfixTypeFullName);
     }
 }

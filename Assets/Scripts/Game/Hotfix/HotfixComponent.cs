@@ -13,6 +13,8 @@ namespace Game
         
         private HotfixHelperBase m_HotfixHelper;
 
+        public HotfixHelperBase HotfixHelper => m_HotfixHelper;
+
 #if ILRuntime
         public ILRuntimeHotfixHelper ILRuntime
         {
@@ -66,6 +68,11 @@ namespace Game
 #endif
             }
         }
+
+        public object CreateInstance(string hotfixTypeFullName)
+        {
+            return m_HotfixHelper.CreateInstance(hotfixTypeFullName);
+        }
         
         public async Task Load()
         {
@@ -104,7 +111,7 @@ namespace Game
 
         private void OnApplicationFocus(bool hasFocus)
         {
-            m_HotfixHelper?.OnApplicationPause(hasFocus);
+            m_HotfixHelper?.OnApplicationFocus(hasFocus);
         }
 
 #if UNITY_EDITOR
