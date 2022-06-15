@@ -6,7 +6,7 @@ namespace Game
     {
         public static string GetConfigAsset(string assetName, bool fromBytes)
         {
-            return Utility.Text.Format("Assets/Res/Configs/{0}.{1}", assetName, fromBytes ? "bytes" : "txt");
+            return Utility.Text.Format("Assets/Res/DataTables/{0}.{1}", assetName, fromBytes ? "bytes" : "txt");
         }
 
         public static string GetDataTableAsset(string assetName, bool fromBytes)
