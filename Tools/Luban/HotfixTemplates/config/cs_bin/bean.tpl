@@ -1,4 +1,4 @@
-using Bright.Serialization;
+using Hotfix.Bright.Serialization;
 using System.Collections.Generic;
 {{
     name = x.name
