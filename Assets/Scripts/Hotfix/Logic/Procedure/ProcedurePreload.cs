@@ -1,16 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Threading.Tasks;
-using Bright.Serialization;
-using UnityEngine;
 using UnityGameFramework.Runtime;
 using ProcedureOwner = Hotfix.Framework.IFsm<Hotfix.Framework.ProcedureManager>;
 using Game;
 using GameEntry = Game.GameEntry;
 using GameFramework.Event;
 using GameFramework;
-using SimpleJSON;
+using UnityEngine;
 
 namespace Hotfix.Logic
 {
@@ -18,7 +14,8 @@ namespace Hotfix.Logic
     {
         private static readonly List<string> DataTableNames = new List<string>()
         {
-            "UIForm"
+            "UIForm",
+            "Entity",
         };
 
         private readonly GameFrameworkLinkedList<string> m_LoadedFlags = new GameFrameworkLinkedList<string>();
@@ -37,6 +34,7 @@ namespace Hotfix.Logic
             m_LoadedFlags.Clear();
 
             PreloadResources();
+            Debug.Log("---------" + Type.GetType("Hotfix.Logic.LoginForm"));
         }
 
         protected override void OnLeave(ProcedureOwner procedureOwner, bool isShutdown)
@@ -56,18 +54,19 @@ namespace Hotfix.Logic
         {
             base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
 
+            Debug.Log(m_LoadedFlags.Count);
             if (m_LoadedFlags.Count > 0)
             {
                 return;
             }
             
-            //ChangeState<ProcedureGame>(procedureOwner);
+            ChangeState<ProcedureEnterGame>(procedureOwner);
         }
 
         private void PreloadResources()
         {
             // Preload configs
-            // LoadConfig("DefaultConfig");
+            LoadConfig("DefaultConfig");
 
             // Preload data tables
             foreach (string dataTableName in DataTableNames)
@@ -77,11 +76,24 @@ namespace Hotfix.Logic
 
             PreloadLuban();
 
+            LoadSprites();
+
             // Preload dictionaries
             // LoadDictionary("Default");
 
             // Preload fonts
             // LoadFont("MainFont");
+        }
+        
+        
+        private void LoadSprites()
+        {
+            string spritesAssetName = "Assets/Res/Sprites/Sprites.prefab";
+            m_LoadedFlags.AddLast(spritesAssetName);
+            GameEntry.SpriteDict.LoadSprites(spritesAssetName, delegate
+            {
+                m_LoadedFlags.Remove(spritesAssetName);
+            });
         }
 
         private async void PreloadLuban()
@@ -109,9 +121,9 @@ namespace Hotfix.Logic
 
         private void LoadDataTable(string dataTableName)
         {
-            string dataTableAssetName = AssetUtility.GetDataTableAsset(dataTableName, true);
+            string dataTableAssetName = AssetUtility.GetDataTableAsset(dataTableName, false);
             m_LoadedFlags.AddLast(dataTableAssetName);
-            GameEntry.DataTable.LoadDataTable(dataTableName, dataTableAssetName, null);
+            GameEntry.DataTable.LoadDataTable(dataTableName, dataTableAssetName, this);
             Log.Info("Load data table '{0}' row config OK.", dataTableName);
         }
 
