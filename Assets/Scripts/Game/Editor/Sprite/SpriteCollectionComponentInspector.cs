@@ -3,11 +3,11 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace Game
+namespace Game.Editor
 {
 #if !ODIN_INSPECTOR
     [CustomEditor(typeof(SpriteCollectionComponent))]
-    public class SpriteCollectionComponentEditor : UnityEditor.Editor
+    public class SpriteCollectionComponentInspector : UnityEditor.Editor
     {
         private SerializedProperty m_AutoReleaseInterval;
         private SpriteCollectionComponent Target => target as SpriteCollectionComponent;
