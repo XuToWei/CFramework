@@ -21,6 +21,12 @@ namespace Game
                 m_EntityLogicHelper = ReferencePool.Acquire<ILRuntimeEntityHelper>();
             }
 #endif
+#if UNITY_EDITOR
+            else if (GameEntry.Hotfix.HotfixType == HotfixType.Editor)
+            {
+                m_EntityLogicHelper = ReferencePool.Acquire<EditorEntityHelper>();
+            }
+#endif
             m_EntityLogicHelper.OnInit(entityData.HotfixEntityType, this, entityData.UserData);
         }
 
