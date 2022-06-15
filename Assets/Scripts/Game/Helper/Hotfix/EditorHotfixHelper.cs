@@ -31,9 +31,9 @@ namespace Game
             throw new GameFrameworkException(Utility.Text.Format("HotfixType [{0}] get fail!", hotfixTypeFullName));
         }
         
-        private object CreateInstance(Type type)
+        public override object CreateInstance(string hotfixTypeFullName)
         {
-            return Activator.CreateInstance(type);
+            return Activator.CreateInstance(GetHotfixType(hotfixTypeFullName));
         }
 
         public T CreateMethodAction<T>(Type hotfixType, object instance, string methodName) where T : Delegate
@@ -48,9 +48,9 @@ namespace Game
             return methodInfo.Invoke(instance, p);
         }
 
-        public override async Task Load()
+        public override Task Load()
         {
-            
+            return Task.Delay(1);
         }
         
         public override void Init()
@@ -68,7 +68,7 @@ namespace Game
             }
             
             m_EntryType = GetHotfixType(HotfixConfig.EntryTypeFullName);
-            m_EntryInstance = CreateInstance(m_EntryType);
+            m_EntryInstance =  Activator.CreateInstance(m_EntryType);
             m_OnEnterMethodAction = CreateMethodAction<Action>(m_EntryType, m_EntryInstance, "OnEnter");
             m_ShutDownMethodAction = CreateMethodAction<Action>(m_EntryType, m_EntryInstance, "OnShutDown");
             m_OnUpdateMethodAction = CreateMethodAction<Action<float, float>>(m_EntryType, m_EntryInstance, "OnUpdate");

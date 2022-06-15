@@ -28,6 +28,11 @@ namespace Game
         private IMethod m_OnApplicationQuitMethod;
 
         public override HotfixType HotfixType => HotfixType.ILRuntime;
+        
+        public override object CreateInstance(string hotfixTypeFullName)
+        {
+            return (m_AppDomain.LoadedTypes[hotfixTypeFullName] as ILType).Instantiate();
+        }
 
         public override async Task Load()
         {
@@ -97,7 +102,7 @@ namespace Game
             ctx.PushFloat(realElapseSeconds);
             ctx.Invoke();
         }
-        
+
         public override void OnApplicationPause(bool pauseStatus)
         {
             if (m_OnApplicationPauseMethod == null)

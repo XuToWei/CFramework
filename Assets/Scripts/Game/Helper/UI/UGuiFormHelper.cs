@@ -38,8 +38,7 @@ namespace Game
             }
 
             Transform transform = gameObject.transform;
-            transform.SetParent(((MonoBehaviour)uiGroup.Helper).transform);
-            transform.localScale = Vector3.one;
+            transform.SetParent(((MonoBehaviour)uiGroup.Helper).transform, false);
             return gameObject.GetOrAddComponent<UIForm>();
         }
 
